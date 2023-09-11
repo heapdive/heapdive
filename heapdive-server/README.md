@@ -6,6 +6,31 @@
     - Store the report JSON files
 - Running environment to run the Docker image
 
+## How can I run the heapdive-server?
+
+    docker pull tokuhirom/heapdive:snapshot
+    docker run -p 8080:8080 \
+      -e S3_BUCKET_NAME=heapdive-dev \
+      -e S3_ENDPOINT=https://example.com \
+      -e S3_ACCESS_KEY=<YOUR_ACCESS_KEY> \
+      -e S3_SECRET_KEY=<YOUR_SECRET_KEY> \
+      -p 8080:8080 \
+      -it tokuhirom/heapdive
+
+## How do I build docker image?
+
+    docker build -t heapdive .
+
+And run the image
+
+    docker run -p 8080:8080 \
+      -e S3_BUCKET_NAME=heapdive-dev \
+      -e S3_ENDPOINT=https://example.com \
+      -e S3_ACCESS_KEY=<YOUR_ACCESS_KEY> \
+      -e S3_SECRET_KEY=<YOUR_SECRET_KEY> \
+      -p 8080:8080 \
+      -it heapdive
+
 ## Configuration variables
 
 ### S3 related

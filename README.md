@@ -19,20 +19,6 @@ Run webpack in watch mode
 
     npm run start
 
-### How do I build docker image?
-
-    docker build -t heapdive .
-
-And run the image
-
-    docker run -p 8080:8080 \
-      -e S3_BUCKET_NAME=heapdive-dev \
-      -e S3_ENDPOINT=https://example.com \
-      -e S3_ACCESS_KEY=<YOUR_ACCESS_KEY> \
-      -e S3_SECRET_KEY=<YOUR_SECRET_KEY> \
-      -p 8080:8080 \
-      -it heapdive
-
 ## LICENSE
 
     Copyright 2023 Tokuhiro Matsuno
