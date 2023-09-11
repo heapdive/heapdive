@@ -45,6 +45,7 @@ tasks.register("createSampleHprof") {
 }
 
 tasks.named("build") {
+    dependsOn("npmInstall", "npm_run_build")
     dependsOn("createSampleHprof")
 }
 
