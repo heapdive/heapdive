@@ -16,7 +16,3 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.21.0")
     testImplementation("org.hamcrest:hamcrest:2.2")
 }
-
-tasks.test {
-    useJUnitPlatform()
-}

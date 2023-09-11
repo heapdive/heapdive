@@ -14,8 +14,6 @@
  *     limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("heapdive-kotlin")
 }
@@ -53,12 +51,3 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.21.0")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
-    }
-}

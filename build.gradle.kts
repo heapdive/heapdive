@@ -16,7 +16,6 @@
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.spring") version "1.9.10"
     id("com.github.node-gradle.node") version "7.0.0"
 }
 
@@ -26,13 +25,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-    }
-
-}
-
-tasks.clean {
-    doLast {
-        delete("heapdive-html-report/src/main/resources/static/main.bundle.js")
     }
 }
 
