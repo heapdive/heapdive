@@ -13,6 +13,8 @@ HeapDive is constructed by the following components:
 
 Generated report doesn't contain any Heap data itself. You can share the report with your co-workers.
 
+![img.png](img.png)
+
 ## Hacking
 
 Run webpack in watch mode
