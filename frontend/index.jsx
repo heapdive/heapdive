@@ -87,6 +87,7 @@ function renderFlameGraph(result, selector) {
 // - the function takes 2 argument. 1st argument is the data, that have a format of the d3's hierarchy. 2nd argument is the selector of the target node.
 // - function name should be `renderPartitions`
 // - show the graph as... height is same as the parent-node. width should be scrollable, it always show the full content.
+// - for each node, could you coloring each node? I want to apply the vivid color for large node, and dark color for the nodes, that have a small value.
 /**
  * Render an icicle diagram based on hierarchical data.
  *
@@ -98,6 +99,9 @@ function renderPartitions(hierarchyData, targetSelector) {
     const margin = {top: 10, right: 10, bottom: 10, left: 10};
     const height = 600 - margin.top - margin.bottom;
     const width = document.querySelector(targetSelector).clientWidth - margin.left - margin.right;
+
+    // Color scale for the nodes based on their value (dark for small values, vivid for large values)
+    const color = d3.scaleSequential(d3.interpolatePlasma).domain([0, d3.max(hierarchyData.children, d => d.value)]);
 
     // Create the SVG canvas
     const svg = d3.select(targetSelector)
@@ -125,7 +129,7 @@ function renderPartitions(hierarchyData, targetSelector) {
     rect.append("rect")
         .attr("width", d => d.y1 - d.y0)
         .attr("height", d => d.x1 - d.x0)
-        .attr("fill", "#69b3a2");
+        .attr("fill", d => color(d.value));
 
     rect.append("text")
         .attr("x", 4)
