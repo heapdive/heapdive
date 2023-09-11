@@ -23,11 +23,17 @@ class RewriteTemplateTest {
     @Test
     fun test() {
         val got = rewriteTemplate(
-                javaClass.classLoader.getResourceAsStream("template.html")!!.readAllBytes()
-                        .toString(Charsets.UTF_8),
+                loadTemplate(),
                 "OK!"
         )
         assertThat(got).doesNotContain("BEGIN_REPORT")
         assertThat(got).contains("OK!")
+    }
+
+    private fun loadTemplate(): String {
+        val templateResource = javaClass.classLoader.getResourceAsStream("template.html")
+        checkNotNull(templateResource) { "template.html not found" }
+        return templateResource.readAllBytes()
+                .toString(Charsets.UTF_8)
     }
 }
