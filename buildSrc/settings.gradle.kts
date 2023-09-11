@@ -14,15 +14,11 @@
  *     limitations under the License.
  */
 
-
 pluginManagement {
     repositories {
-        maven { url = uri("https://plugins.gradle.org/m2/") }
+        mavenCentral()
+        gradlePluginPortal()
     }
-}
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
 @Suppress("UnstableApiUsage")
@@ -33,14 +29,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from(files("./gradle/libraries.versions.toml"))
+            from(files("../gradle/libraries.versions.toml"))
         }
     }
 }
-
-rootProject.name = "heapdive"
-
-include("heapdive-cli")
-include("heapdive-server")
-include("heapdive-html-report")
-include("intellij-community-hprof")

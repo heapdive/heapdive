@@ -1,0 +1,10 @@
+[versions]
+kotlin = "1.9.0"
+spring-boot = "3.1.1"
+
+[libraries]
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
+kotlin-jvm-plugin = { module = "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin", version.ref = "kotlin" }
+springboot-bom = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
+springboot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plugin", version.ref = "spring-boot" }
+springboot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }

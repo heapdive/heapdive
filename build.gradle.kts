@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
 /*
  *     Copyright 2023 Tokuhiro Matsuno
  *
@@ -17,7 +15,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
  */
 
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm")
     kotlin("plugin.spring") version "1.9.10"
     id("com.github.node-gradle.node") version "7.0.0"
 }
@@ -30,14 +28,6 @@ allprojects {
         mavenCentral()
     }
 
-    // verbose output for GitHub actions
-    tasks.test {
-        testLogging {
-            events("passed", "skipped", "failed")
-            exceptionFormat = TestExceptionFormat.FULL
-            showStandardStreams = true
-        }
-    }
 }
 
 tasks.clean {

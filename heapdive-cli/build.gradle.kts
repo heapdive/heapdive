@@ -14,10 +14,8 @@
  *     limitations under the License.
  */
 
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.9.10"
+    id("heapdive-kotlin")
     application
     id("com.github.johnrengelman.shadow") version "7.1.0"
 }
@@ -51,16 +49,6 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.assertj:assertj-core:3.21.0")
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        freeCompilerArgs += "-Xjsr305=strict"
-        jvmTarget = "17"
-    }
 }
 
 application {

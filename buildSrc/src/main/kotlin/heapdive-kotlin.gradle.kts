@@ -14,33 +14,29 @@
  *     limitations under the License.
  */
 
-
-pluginManagement {
-    repositories {
-        maven { url = uri("https://plugins.gradle.org/m2/") }
-    }
-}
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
+    kotlin("jvm")
 }
 
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-    repositories {
-        mavenCentral()
-    }
-
-    versionCatalogs {
-        create("libs") {
-            from(files("./gradle/libraries.versions.toml"))
-        }
+tasks.test {
+    useJUnitPlatform()
+}
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs += "-Xjsr305=strict"
+        jvmTarget = "17"
     }
 }
 
-rootProject.name = "heapdive"
 
-include("heapdive-cli")
-include("heapdive-server")
-include("heapdive-html-report")
-include("intellij-community-hprof")
+// verbose output for GitHub actions
+tasks.test {
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
+}
