@@ -29,6 +29,15 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
+    // verbose output for GitHub actions
+    tasks.test {
+        testLogging {
+            events("passed", "skipped", "failed")
+            exceptionFormat = TestExceptionFormat.FULL
+            showStandardStreams = true
+        }
+    }
 }
 
 tasks.clean {
@@ -49,11 +58,3 @@ tasks.named("build") {
     dependsOn("createSampleHprof")
 }
 
-// verbose output for GitHub actions
-tasks.test {
-    testLogging {
-        events("passed", "skipped", "failed")
-        exceptionFormat = TestExceptionFormat.FULL
-        showStandardStreams = true
-    }
-}
