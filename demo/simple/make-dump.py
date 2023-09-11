@@ -17,7 +17,6 @@ import os
 import requests
 import subprocess
 import sys
-import tempfile
 
 
 def download_file(url, filename):
@@ -38,7 +37,6 @@ else:
     name = "Hi"
 
 srcfile = os.path.join(script_dir, name + ".java")
-tmpfile = tempfile.mktemp()
 outfile = os.path.join(script_dir, name + ".hprof")
 heapdumptoolfile = os.path.join(script_dir, "heap-dump-tool.jar")
 
@@ -47,19 +45,14 @@ if os.path.exists(outfile):
     os.remove(outfile)
 
 # Run `javac Hi.java`
-subprocess.run(["javac", srcfile], cwd=script_dir)
+subprocess.run(["javac", srcfile], cwd=script_dir, check=True)
 
 # `java Hi` in background
 java = subprocess.Popen(["java", name], cwd=script_dir)
 
 # `jcmd <pid> GC.heap_dump $PWD/Hi.hprof` to dump heap
-subprocess.run(["jcmd", str(java.pid), "GC.heap_dump", tmpfile], cwd=script_dir)
+subprocess.run(["jcmd", str(java.pid), "GC.heap_dump", outfile], cwd=script_dir, check=True)
 
 java.kill()
 
-download_file("https://repo1.maven.org/maven2/com/paypal/heap-dump-tool/1.1.3/heap-dump-tool-1.1.3-all.jar",
-              heapdumptoolfile)
-
-subprocess.run(["java", "-jar", heapdumptoolfile, "sanitize", tmpfile, outfile], cwd=script_dir)
-
-os.remove(tmpfile)
+print("Heap dump file: ", outfile)
