@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 /*
  *     Copyright 2023 Tokuhiro Matsuno
  *
@@ -45,4 +47,13 @@ tasks.register("createSampleHprof") {
 
 tasks.named("build") {
     dependsOn("createSampleHprof")
+}
+
+// verbose output for GitHub actions
+tasks.test {
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
 }
