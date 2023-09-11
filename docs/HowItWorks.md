@@ -1,0 +1,31 @@
+# How it works?
+
+- HProfAnalysis
+    - Create class definition map
+        - HProfMetadata.create()
+        - CompositeVisitor visits the heapdump, and aggregate following things.
+            - classStore
+            - threads
+            - roots
+    - Create class diagram
+        - HistogramVisitor visits the heapdump, and aggregate following things.
+            - Calculate the sum of instances for each class.
+        - Use ClassNomination to find heavy classes
+        - Ignore following packages.
+            - java.
+            - com.google.common.
+            - kotlin.
+            - com.intellij.util.
+    - Create id mapping file
+        - Create RemapIDsVisitor
+            - remap IDs for each object
+    - Create object graph files
+    - Call `analysisCallback`
+        - Call `AnalyzeHtmlReport.analyze()`
+            - `prepareHistogramSection`
+                - Histogram(by size, by count)
+            - `traverseInstanceGraph`
+                - Heap Summary
+                - Flame graph
+            - `preparePerClassSection`
+                - Instances of each nominated class

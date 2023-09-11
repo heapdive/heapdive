@@ -1,0 +1,14 @@
+spring.web.resources.static-locations: classpath:/static/
+spring:
+  mvc:
+    static-path-pattern: /static/**
+management:
+  endpoint:
+    configprops:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: env,health,configprops
+  server:
+    port: 8081
