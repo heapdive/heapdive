@@ -34,3 +34,15 @@ tasks.clean {
         delete("heapdive-html-report/src/main/resources/static/main.bundle.js")
     }
 }
+
+tasks.register("createSampleHprof") {
+    doLast {
+        exec {
+            commandLine("python3", "demo/simple/make-dump.py", "Hi")
+        }
+    }
+}
+
+tasks.named("build") {
+    dependsOn("createSampleHprof")
+}
