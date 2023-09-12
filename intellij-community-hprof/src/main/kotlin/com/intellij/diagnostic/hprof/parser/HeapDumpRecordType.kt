@@ -16,23 +16,23 @@
 package com.intellij.diagnostic.hprof.parser
 
 enum class HeapDumpRecordType(val value: Int) {
-  NotInitialized(0x0),
-  RootUnknown(0xff),
-  RootGlobalJNI(0x01),
-  RootLocalJNI(0x02),
-  RootJavaFrame(0x03),
-  RootNativeStack(0x04),
-  RootStickyClass(0x05),
-  RootThreadBlock(0x06),
-  RootMonitorUsed(0x07),
-  RootThreadObject(0x08),
-  ClassDump(0x20),
-  InstanceDump(0x21),
-  ObjectArrayDump(0x22),
-  PrimitiveArrayDump(0x23);
+    NotInitialized(0x0),
+    RootUnknown(0xff),
+    RootGlobalJNI(0x01),
+    RootLocalJNI(0x02),
+    RootJavaFrame(0x03),
+    RootNativeStack(0x04),
+    RootStickyClass(0x05),
+    RootThreadBlock(0x06),
+    RootMonitorUsed(0x07),
+    RootThreadObject(0x08),
+    ClassDump(0x20),
+    InstanceDump(0x21),
+    ObjectArrayDump(0x22),
+    PrimitiveArrayDump(0x23);
 
-  companion object {
-    private val map = HeapDumpRecordType.values().associateBy(HeapDumpRecordType::value)
-    fun fromInt(type: Int): HeapDumpRecordType = map[type]!!
-  }
+    companion object {
+        private val map = entries.associateBy(HeapDumpRecordType::value)
+        fun fromInt(type: Int): HeapDumpRecordType = map[type]!!
+    }
 }
