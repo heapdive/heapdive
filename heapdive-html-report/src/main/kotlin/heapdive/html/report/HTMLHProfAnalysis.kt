@@ -31,7 +31,6 @@ import com.intellij.diagnostic.hprof.util.ListProvider
 import com.intellij.diagnostic.hprof.util.PartialProgressIndicator
 import com.intellij.diagnostic.hprof.visitors.RemapIDsVisitor
 import com.intellij.openapi.progress.ProgressIndicator
-import heapdive.html.model.HProfAnalysisReport
 import heapdive.html.model.HProfReport
 import heapdive.html.model.MetaInfo
 import heapdive.html.model.SimpleHProfReport
@@ -43,8 +42,7 @@ import java.nio.file.Path
 import java.nio.file.StandardOpenOption
 
 class HTMLHProfAnalysis(private val hprofFileChannel: FileChannel,
-                        private val tempFilenameSupplier: SystemTempFilenameSupplier,
-                        private val analysisCallback: (AnalysisContext, ListProvider, ProgressIndicator) -> HProfAnalysisReport) {
+                        private val tempFilenameSupplier: SystemTempFilenameSupplier) {
 
     private data class TempFile(
             val type: String,
@@ -150,7 +148,9 @@ class HTMLHProfAnalysis(private val hprofFileChannel: FileChannel,
                     histogram
             )
 
-            val analysisReport = analysisCallback(analysisContext, fileBackedListProvider, PartialProgressIndicator(progress, 0.4, 0.4))
+            // main analysis process
+            val analysisReport = AnalyzeHtmlReport(analysisContext, fileBackedListProvider)
+                    .analyze(PartialProgressIndicator(progress, 0.4, 0.4))
             analysisStopwatch.stop()
 
             val metaInfo = MetaInfo(

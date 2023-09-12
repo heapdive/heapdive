@@ -52,7 +52,7 @@ import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
 
-open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, private val listProvider: ListProvider) {
+open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, private val listProvider: ListProvider) {
 
     private val unreachableDisposableObjects = LongArrayList()
     private var strongRefHistogram: Histogram? = null
