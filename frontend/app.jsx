@@ -26,7 +26,7 @@ export class App extends React.Component {
         const result = this.props.result;
 
         return <div>
-            <ChartInformation data={result.analysisReport.flameGraph}/>
+            <ChartInformation data={result.analysisReport.dominatorTree || result.analysisReport.flameGraph}/>
 
             <SizeHistogramInformation bySizeHistogram={result.analysisReport.histogram.bySizeHistogram}/>
 

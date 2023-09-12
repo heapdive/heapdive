@@ -20,6 +20,6 @@ data class HProfAnalysisReport(
         val histogram: HistogramReport,
         val heapSummary: HeapSummaryReport,
         val perClass: List<NominatedClass>,
-        val flameGraph: DominatorFlameGraph?,
+        val dominatorTree: DominatorTree?,
         val log: String,
 )

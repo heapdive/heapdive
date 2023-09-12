@@ -16,8 +16,8 @@
 
 package heapdive.html.model
 
-data class DominatorFlameGraph(
+data class DominatorTree(
         val name: String,
         val value: Int,
-        val children: List<DominatorFlameGraph> = emptyList(),
+        val children: List<DominatorTree> = emptyList(),
 )

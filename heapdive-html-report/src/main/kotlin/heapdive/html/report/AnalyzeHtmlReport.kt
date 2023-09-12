@@ -30,7 +30,7 @@ import com.intellij.diagnostic.hprof.util.TruncatingPrintBuffer
 import com.intellij.diagnostic.hprof.visitors.HistogramVisitor
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
-import heapdive.html.model.DominatorFlameGraph
+import heapdive.html.model.DominatorTree
 import heapdive.html.model.HProfAnalysisReport
 import heapdive.html.model.HeapSummaryReport
 import heapdive.html.model.HistogramReport
@@ -57,7 +57,7 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
     private var strongRefHistogram: Histogram? = null
     private var softWeakRefHistogram: Histogram? = null
     private var traverseReport: String? = null
-    private var flameGraph: DominatorFlameGraph? = null
+    private var dominatorTree: DominatorTree? = null
     private var log: StringBuilder = StringBuilder()
 
     private val parentList = analysisContext.parentList
@@ -86,7 +86,7 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
                 heapSummary = heapSummaryReport,
                 // Instances of each nominated class
                 perClass = preparePerClassSection(PartialProgressIndicator(progress, 0.5, 0.5)),
-                flameGraph = flameGraph,
+                dominatorTree = dominatorTree,
                 log = log.toString(),
         )
     }
@@ -414,9 +414,9 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
             if (usableDiskSpace - estimateDominatorTempFilesSize(visitedCount, edgeCount) > config.dominatorTreeOptions.diskSpaceThreshold) {
                 try {
                     rootsSet.addAll(frameRootsSet)
-                    val (flameGraphLog, flameGraph) = computeDominatorFlameGraph(nav, rootsSet, sizesList, edgeCount)
+                    val (flameGraphLog, dominatorTree) = computeDominatorFlameGraph(nav, rootsSet, sizesList, edgeCount)
                     log.append("\n\n## FlameGraph log:\n$flameGraphLog\n\n")
-                    this.flameGraph = flameGraph
+                    this.dominatorTree = dominatorTree
                 } catch (e: Exception) {
                     e.printStackTrace()
                     val baos = ByteArrayOutputStream()
@@ -500,7 +500,7 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
     }
 
     @Suppress("DEPRECATION")
-    private fun computeDominatorFlameGraph(nav: ObjectNavigator, rootsSet: IntSet, sizesList: IntList, edgeCount: Int): Pair<StringBuilder, DominatorFlameGraph> {
+    private fun computeDominatorFlameGraph(nav: ObjectNavigator, rootsSet: IntSet, sizesList: IntList, edgeCount: Int): Pair<String, DominatorTree> {
         val totalStopwatch = Stopwatch.createUnstarted()
         val postorderStopwatch = Stopwatch.createUnstarted()
         val incomingEdgesStopwatch = Stopwatch.createUnstarted()
@@ -851,20 +851,20 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
         }
 
         var renderedNodes = 0
-        fun buildFlameGraph(poNumber: Int, depth: Int = 0): DominatorFlameGraph {
+        fun buildDominatorTree(poNumber: Int, depth: Int = 0): DominatorTree {
             val signature = signatureFor(poNumber)
             val children = idomTreeChildren[poNumber]
             if (depth < config.dominatorTreeOptions.maxDepth && children != null) {
                 renderedNodes++
-                val childrenGraphs = mutableListOf<DominatorFlameGraph>()
+                val childrenGraphs = mutableListOf<DominatorTree>()
                 children.sortedByDescending { p -> retainedSizes[p] }.forEach { p ->
                     if (renderedNodes >= config.dominatorTreeOptions.headLimit) return@forEach
-                    childrenGraphs.add(buildFlameGraph(p, depth + 1))
+                    childrenGraphs.add(buildDominatorTree(p, depth + 1))
                 }
-                return DominatorFlameGraph(name = signature, value = retainedSizes[poNumber], children = childrenGraphs)
+                return DominatorTree(name = signature, value = retainedSizes[poNumber], children = childrenGraphs)
             } else {
                 renderedNodes++
-                return DominatorFlameGraph(name = signature, value = retainedSizes[poNumber])
+                return DominatorTree(name = signature, value = retainedSizes[poNumber])
             }
         }
 
@@ -895,8 +895,8 @@ open class AnalyzeHtmlReport(private val analysisContext: AnalysisContext, priva
             appendLine("    depth cutoff: ${config.dominatorTreeOptions.maxDepth}")
             appendLine(
                     "    pruned tree contains $renderedNodes nodes ${if (renderedNodes > config.dominatorTreeOptions.headLimit) "(truncated to ${config.dominatorTreeOptions.headLimit})" else ""}")
-        }
-        return Pair(metaInfo, buildFlameGraph(rootPonum, 0))
+        }.toString()
+        return Pair(metaInfo, buildDominatorTree(rootPonum, 0))
     }
 
     private fun IntList.clear(size: Int) {
