@@ -20,7 +20,7 @@ function processText(text) {
     const lines = text.split('\n');
     const newLines = lines.map((line, index) => {
         if (/(ROOT: Static field.*CGLIB|org.springframework.aop.framework)/.test(line)) {
-            return <span key={index} className="muted">${line}<br/></span>;
+            return <span key={index} className="muted">{line}<br/></span>;
         }
 
         const match = line.match(/]\s*([0-9.]+)([KMGTP]?B)/);
