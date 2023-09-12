@@ -10,8 +10,6 @@
 
 <h1><a href="/">Heapdive</a></h1>
 
-<div id="chart"></div>
-
 <div id="root"></div>
 
 </body>
