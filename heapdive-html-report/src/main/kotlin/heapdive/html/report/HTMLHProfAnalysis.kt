@@ -139,7 +139,6 @@ class HTMLHProfAnalysis(private val hprofFileChannel: FileChannel,
 
             val nominatedClassNames = nominatedClasses.map { it.classDefinition.name }
             val analysisConfig = AnalysisConfig(perClassOptions = AnalysisConfig.PerClassOptions(classNames = nominatedClassNames),
-                    metaInfoOptions = AnalysisConfig.MetaInfoOptions(include = true),
                     traverseOptions = AnalysisConfig.TraverseOptions(onlyStrongReferences = onlyStrongReferences, includeClassesAsRoots = includeClassesAsRoots))
             val analysisContext = AnalysisContext(
                     navigator,

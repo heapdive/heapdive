@@ -15,14 +15,12 @@
  */
 package com.intellij.diagnostic.hprof.histogram
 
-import com.intellij.diagnostic.hprof.analysis.AnalysisConfig
 import com.intellij.diagnostic.hprof.classstore.ClassStore
 import com.intellij.diagnostic.hprof.parser.HProfEventBasedParser
 import com.intellij.diagnostic.hprof.util.HeapReportUtils.toPaddedShortStringAsCount
 import com.intellij.diagnostic.hprof.util.HeapReportUtils.toPaddedShortStringAsSize
 import com.intellij.diagnostic.hprof.util.TruncatingPrintBuffer
 import com.intellij.diagnostic.hprof.visitors.HistogramVisitor
-import kotlin.math.min
 
 class Histogram(val entries: List<HistogramEntry>, val instanceCount: Long) {
 
@@ -68,54 +66,6 @@ class Histogram(val entries: List<HistogramEntry>, val instanceCount: Long) {
             return histogramVisitor.createHistogram()
         }
 
-        fun prepareMergedHistogramReport(mainHistogram: Histogram, mainHistogramName: String,
-                                         secondaryHistogram: Histogram, secondaryHistogramName: String,
-                                         options: AnalysisConfig.HistogramOptions): String {
-            val result = StringBuilder()
-            val appendToResult = { s: String -> result.appendLine(s); Unit }
-
-            val mapClassNameToEntrySecondary = HashMap<String, HistogramEntry>()
-            secondaryHistogram.entries.forEach {
-                mapClassNameToEntrySecondary[it.classDefinition.name] = it
-            }
-
-            val summary =
-                    "${getSummaryLine(mainHistogram, mainHistogramName)}\n${getSummaryLine(secondaryHistogram, secondaryHistogramName)}"
-
-            if (options.includeByCount) {
-                result.appendLine("Histogram. Top ${options.classByCountLimit} by instance count [All-objects] [Only-strong-ref]:")
-                var counter = 1
-
-                TruncatingPrintBuffer(options.classByCountLimit, 0, appendToResult).use { buffer ->
-                    mainHistogram.entries.forEach { entry ->
-                        val entry2 = mapClassNameToEntrySecondary[entry.classDefinition.name]
-                        buffer.println(formatEntryLineMerged(counter, entry, entry2))
-                        counter++
-                    }
-                }
-                result.appendLine(summary)
-            }
-
-            if (options.includeBySize && options.includeByCount) {
-                result.appendLine()
-            }
-
-            if (options.includeBySize) {
-                val classCountInByBytesSection = min(mainHistogram.entries.size, options.classBySizeLimit)
-                result.appendLine("Top $classCountInByBytesSection by size:")
-                val entriesByBytes = mainHistogram.entries.sortedByDescending { it.totalBytes }
-                for (i in 0 until classCountInByBytesSection) {
-                    val entry = entriesByBytes[i]
-                    val entry2 = mapClassNameToEntrySecondary[entry.classDefinition.name]
-                    result.appendLine(formatEntryLineMerged(i + 1, entry, entry2))
-                }
-                if (!options.includeByCount) {
-                    result.appendLine(summary)
-                }
-            }
-            return result.toString()
-        }
-
         private fun getSummaryLine(histogram: Histogram,
                                    histogramName: String): String {
             val (totalInstances, totalBytes) = histogram.getTotals()
@@ -125,16 +75,6 @@ class Histogram(val entries: List<HistogramEntry>, val instanceCount: Long) {
                     toPaddedShortStringAsSize(totalBytes),
                     histogram.entries.size,
                     histogram.instanceCount)
-        }
-
-        private fun formatEntryLineMerged(counter: Int, entry: HistogramEntry, entry2: HistogramEntry?): String {
-            return String.format("%5d: [%s/%s] [%s/%s] %s",
-                    counter,
-                    toPaddedShortStringAsCount(entry.totalInstances),
-                    toPaddedShortStringAsSize(entry.totalBytes),
-                    toPaddedShortStringAsCount(entry2?.totalInstances ?: 0),
-                    toPaddedShortStringAsSize(entry2?.totalBytes ?: 0),
-                    entry.classDefinition.prettyName)
         }
 
         private fun formatEntryLine(counter: Int, entry: HistogramEntry): String {
