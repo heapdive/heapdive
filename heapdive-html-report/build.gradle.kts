@@ -32,7 +32,9 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.slf4j)
 
-    implementation(libs.kotlin.io.core) // may not use?
+    implementation(libs.guava)
+    implementation(libs.fastutil)
+
     implementation(libs.kotlinx.cli)
 
     implementation(libs.jackson.databind)

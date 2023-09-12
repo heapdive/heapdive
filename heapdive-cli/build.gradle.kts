@@ -39,7 +39,6 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.slf4j)
 
-    implementation(libs.kotlin.io.core) // TODO remove
     implementation(libs.kotlinx.cli)
 
     testImplementation(platform(libs.junit.bom))
