@@ -20,9 +20,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
-group = "heapdive"
-version = "0.0.1-SNAPSHOT"
-
 repositories {
     mavenCentral()
 }

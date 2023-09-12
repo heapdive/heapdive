@@ -21,7 +21,11 @@ plugins {
 
 allprojects {
     group = "heapdive"
-    version = "0.0.1-SNAPSHOT"
+    version = if (project.hasProperty("releaseVersion")) {
+        project.findProperty("releaseVersion").toString()
+    } else {
+        "0.0.1-SNAPSHOT"
+    }
 
     repositories {
         mavenCentral()

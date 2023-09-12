@@ -20,9 +20,6 @@ plugins {
     kotlin("plugin.spring") version "1.9.10"
 }
 
-group = "heapdive"
-version = "0.0.1-SNAPSHOT"
-
 dependencies {
     implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
 
