@@ -16,25 +16,25 @@
 package com.intellij.diagnostic.hprof.parser
 
 enum class RecordType(val value: Int) {
-  NotInitialized(0x00),
-  StringInUTF8(0x01),
-  LoadClass(0x02),
-  UnloadClass(0x03),
-  StackFrame(0x04),
-  StackTrace(0x05),
-  AllocSites(0x06),
-  HeapSummary(0x07),
-  StartThread(0x0A),
-  EndThread(0x0B),
-  HeapDump(0x0C),
-  HeapDumpSegment(0x1C),
-  HeapDumpEnd(0x2C),
-  CPUSamples(0x0D),
-  ControlSettings(0x0E);
+    NotInitialized(0x00),
+    StringInUTF8(0x01),
+    LoadClass(0x02),
+    UnloadClass(0x03),
+    StackFrame(0x04),
+    StackTrace(0x05),
+    AllocSites(0x06),
+    HeapSummary(0x07),
+    StartThread(0x0A),
+    EndThread(0x0B),
+    HeapDump(0x0C),
+    HeapDumpSegment(0x1C),
+    HeapDumpEnd(0x2C),
+    CPUSamples(0x0D),
+    ControlSettings(0x0E);
 
-  companion object {
-    private val map = values().associateBy(RecordType::value)
-    fun fromInt(type: Int): RecordType = map[type]!!
-  }
+    companion object {
+        private val map = entries.associateBy(RecordType::value)
+        fun fromInt(type: Int): RecordType = map[type]!!
+    }
 
 }
