@@ -16,7 +16,6 @@
  */
 package heapdive.html.report
 
-import com.intellij.diagnostic.DiagnosticBundle
 import com.intellij.diagnostic.hprof.analysis.AnalysisContext
 import com.intellij.diagnostic.hprof.analysis.GCRootPathsTree
 import com.intellij.diagnostic.hprof.classstore.ClassDefinition
@@ -174,7 +173,7 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
             nominatedInstances[classStore[it]] = IntOpenHashSet()
         }
 
-        progress.text2 = DiagnosticBundle.message("analyze.graph.progress.details.collect.roots")
+        progress.text2 = "Collect all object roots"
 
         var toVisit = IntArrayList()
         var toVisit2 = IntArrayList()
@@ -210,7 +209,7 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
 
         var leafCounter = 0
 
-        progress.text2 = DiagnosticBundle.message("analyze.graph.progress.details.traversing.instance.graph")
+        progress.text2 = "Traversing instance graph"
 
         val strongRefHistogramEntries = HashMap<ClassDefinition, HistogramVisitor.InternalHistogramEntry>()
         val reachableNonStrongHistogramEntries = HashMap<ClassDefinition, HistogramVisitor.InternalHistogramEntry>()
