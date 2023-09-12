@@ -4,10 +4,10 @@ HeapDive is a heap dump analyzer based on IntelliJ IDEA's heap dump analyzer.
 
 HeapDive is constructed by the following components:
 
-- heapdive-server
+- [heapdive-server](https://github.com/heapdive/heapdive/blob/main/heapdive-server/README.md)
     - A server which receives heap dump files and analyze it. and then, stores the analyzed report to S3.
     - Show the analyzed report on the web browser.
-- heapdive-cli
+- [heapdive-cli](https://github.com/heapdive/heapdive/blob/main/heapdive-cli/README.md)
     - CLI tool to generate heap dump analyze report.
     - This tool generates single HTML file without dependency.
 
