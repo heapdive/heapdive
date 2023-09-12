@@ -3,6 +3,9 @@ name: Docker
 on:
   push:
     branches: [ main ]
+  release:
+    types:
+      - created
 
 jobs:
   build:
@@ -13,6 +16,15 @@ jobs:
       packages: write
 
     steps:
+      - name: Determine tag for Docker image
+        id: determine-tag
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "::set-output name=tag::${{ github.event.release.tag_name }}"
+          else
+            echo "::set-output name=tag::snapshot"
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4
 
@@ -29,7 +41,7 @@ jobs:
         run: docker build -t heapdive .
 
       - name: Tag Docker image
-        run: docker tag heapdive tokuhirom/heapdive:snapshot
+        run: docker tag heapdive tokuhirom/heapdive:${{ steps.determine-tag.outputs.tag }}
 
       - name: Build and push Docker image
-        run: docker push tokuhirom/heapdive:snapshot
+        run: docker push tokuhirom/heapdive:${{ steps.determine-tag.outputs.tag }}
