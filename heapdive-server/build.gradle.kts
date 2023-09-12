@@ -26,7 +26,7 @@ dependencies {
     implementation(project(":intellij-community-hprof"))
     implementation(project(":heapdive-html-report"))
 
-    implementation("software.amazon.awssdk:s3:2.20.140")
+    implementation(libs.aws.sdk.s3)
 
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

@@ -5,14 +5,13 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("ch.qos.logback:logback-classic:1.2.11")
-    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation(libs.logback)
+    implementation(libs.slf4j)
 
-    implementation("com.google.guava:guava:32.1.2-jre")
-    implementation("it.unimi.dsi:fastutil:8.5.12")
+    implementation(libs.guava) // used for Stopwatch
+    implementation(libs.fastutil)
 
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.assertj:assertj-core:3.21.0")
-    testImplementation("org.hamcrest:hamcrest:2.2")
+    testImplementation(libs.assertj.core)
 }

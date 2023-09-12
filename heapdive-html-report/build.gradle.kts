@@ -27,24 +27,19 @@ dependencies {
 
     implementation(project(":intellij-community-hprof"))
 
-    implementation("it.unimi.dsi:fastutil:8.5.12")
+    implementation(libs.commons.text)
 
-    implementation("com.google.guava:guava:32.1.2-jre")
+    implementation(libs.logback)
+    implementation(libs.slf4j)
 
-    implementation("org.apache.commons:commons-text:1.10.0")
+    implementation(libs.kotlin.io.core) // may not use?
+    implementation(libs.kotlinx.cli)
 
-    implementation("ch.qos.logback:logback-classic:1.2.11")
-    implementation("org.slf4j:slf4j-api:1.7.32")
+    implementation(libs.jackson.databind)
+    implementation(libs.jackson.datatype.jsr310)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.2.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3.5")
-
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.11.3")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.3")
-
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.assertj:assertj-core:3.21.0")
+    testImplementation(libs.assertj.core)
 }
 
