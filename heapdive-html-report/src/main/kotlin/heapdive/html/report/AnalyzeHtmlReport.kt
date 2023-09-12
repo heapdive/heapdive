@@ -415,7 +415,8 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
             if (usableDiskSpace - estimateDominatorTempFilesSize(visitedCount, edgeCount) > config.dominatorTreeOptions.diskSpaceThreshold) {
                 try {
                     rootsSet.addAll(frameRootsSet)
-                    val (_, flameGraph) = computeDominatorFlameGraph(nav, rootsSet, sizesList, edgeCount)
+                    val (flameGraphLog, flameGraph) = computeDominatorFlameGraph(nav, rootsSet, sizesList, edgeCount)
+                    log.append("\n\n## FlameGraph log:\n$flameGraphLog\n\n")
                     this.flameGraph = flameGraph
                 } catch (e: Exception) {
                     e.printStackTrace()
