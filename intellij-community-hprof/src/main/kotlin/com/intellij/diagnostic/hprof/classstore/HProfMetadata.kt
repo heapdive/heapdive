@@ -17,7 +17,11 @@ package com.intellij.diagnostic.hprof.classstore
 
 import com.intellij.diagnostic.hprof.navigator.RootReason
 import com.intellij.diagnostic.hprof.parser.HProfEventBasedParser
-import com.intellij.diagnostic.hprof.visitors.*
+import com.intellij.diagnostic.hprof.visitors.CollectRootReasonsVisitor
+import com.intellij.diagnostic.hprof.visitors.CollectStringValuesVisitor
+import com.intellij.diagnostic.hprof.visitors.CollectThreadInfoVisitor
+import com.intellij.diagnostic.hprof.visitors.CompositeVisitor
+import com.intellij.diagnostic.hprof.visitors.CreateClassStoreVisitor
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
@@ -26,45 +30,45 @@ import java.util.function.LongUnaryOperator
 class HProfMetadata(var classStore: ClassStore, // TODO: private-set, public-get
                     val threads: Long2ObjectMap<ThreadInfo>,
                     var roots: Long2ObjectMap<RootReason>) {
-  class RemapException : Exception()
+    class RemapException : Exception()
 
-  fun remapIds(remappingFunction: LongUnaryOperator) {
-    // Remap ids in class store
-    classStore = classStore.createStoreWithRemappedIDs(remappingFunction)
+    fun remapIds(remappingFunction: LongUnaryOperator) {
+        // Remap ids in class store
+        classStore = classStore.createStoreWithRemappedIDs(remappingFunction)
 
-    // Remap root objects' ids
-    val newRoots = Long2ObjectOpenHashMap<RootReason>()
-    for (entry in Long2ObjectMaps.fastIterable(roots)) {
-      try {
-        val newKey = remappingFunction.applyAsLong(entry.longKey)
-        assert(!newRoots.containsKey(newKey))
-        newRoots.put(newKey, entry.value)
-      } catch (e: RemapException) {
-        // Ignore root entry if there is no associated object
-      }
+        // Remap root objects' ids
+        val newRoots = Long2ObjectOpenHashMap<RootReason>()
+        for (entry in Long2ObjectMaps.fastIterable(roots)) {
+            try {
+                val newKey = remappingFunction.applyAsLong(entry.longKey)
+                assert(!newRoots.containsKey(newKey))
+                newRoots.put(newKey, entry.value)
+            } catch (e: RemapException) {
+                // Ignore root entry if there is no associated object
+            }
+        }
+        roots = newRoots
     }
-    roots = newRoots
-  }
 
-  companion object {
-    fun create(parser: HProfEventBasedParser): HProfMetadata {
-      val stringIdMap = Long2ObjectOpenHashMap<String>()
-      val threadsMap = Long2ObjectOpenHashMap<ThreadInfo>()
+    companion object {
+        fun create(parser: HProfEventBasedParser): HProfMetadata {
+            val stringIdMap = Long2ObjectOpenHashMap<String>()
+            val threadsMap = Long2ObjectOpenHashMap<ThreadInfo>()
 
-      val classStoreVisitor = CreateClassStoreVisitor(stringIdMap)
-      val threadInfoVisitor = CollectThreadInfoVisitor(threadsMap, stringIdMap)
-      val rootReasonsVisitor = CollectRootReasonsVisitor(threadsMap)
+            val classStoreVisitor = CreateClassStoreVisitor(stringIdMap)
+            val threadInfoVisitor = CollectThreadInfoVisitor(threadsMap, stringIdMap)
+            val rootReasonsVisitor = CollectRootReasonsVisitor(threadsMap)
 
-      val visitor = CompositeVisitor(
-        CollectStringValuesVisitor(stringIdMap),
-        classStoreVisitor,
-        threadInfoVisitor,
-        rootReasonsVisitor
-      )
-      parser.accept(visitor, "create hprof metadata")
-      return HProfMetadata(classStoreVisitor.getClassStore(),
-                           threadsMap,
-                           rootReasonsVisitor.roots)
+            val visitor = CompositeVisitor(
+                    CollectStringValuesVisitor(stringIdMap),
+                    classStoreVisitor,
+                    threadInfoVisitor,
+                    rootReasonsVisitor
+            )
+            parser.accept(visitor, "create hprof metadata")
+            return HProfMetadata(classStoreVisitor.getClassStore(),
+                    threadsMap,
+                    rootReasonsVisitor.roots)
+        }
     }
-  }
 }

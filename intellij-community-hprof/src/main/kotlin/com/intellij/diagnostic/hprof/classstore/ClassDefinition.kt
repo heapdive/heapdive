@@ -31,160 +31,157 @@ class ClassDefinition(val name: String,
                       val objectStaticFields: Array<StaticField>,
                       val primitiveStaticFields: Array<StaticField>) {
 
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
-    other as ClassDefinition
+        other as ClassDefinition
 
-    if (id != other.id) return false
+        if (id != other.id) return false
 
-    if (id == 0L) {
-      return name == other.name
+        if (id == 0L) {
+            return name == other.name
+        }
+
+        return true
     }
 
-    return true
-  }
+    val prettyName: String
+        get() = computePrettyName(name)
 
-  val prettyName: String
-    get() = computePrettyName(name)
+    val undecoratedName: String
+        get() = name.substringBefore('!')
 
-  val undecoratedName: String
-    get() = name.substringBefore('!')
+    companion object {
+        const val OBJECT_PREAMBLE_SIZE: Int = 8
+        const val ARRAY_PREAMBLE_SIZE: Int = 12
 
-  companion object {
-    const val OBJECT_PREAMBLE_SIZE: Int = 8
-    const val ARRAY_PREAMBLE_SIZE: Int = 12
+        @NonNls
+        fun computePrettyName(name: String): String {
+            if (!name.startsWith('['))
+                return name
+            var arraySymbolsCount = 0
+            while (name.length > arraySymbolsCount && name[arraySymbolsCount] == '[')
+                arraySymbolsCount++
+            if (name.length <= arraySymbolsCount) {
+                // Malformed name
+                return name
+            }
+            val arrayType: Char = name[arraySymbolsCount]
+            val arrayString: String = "[]".repeat(arraySymbolsCount)
+            return when (arrayType) {
+                'B' -> "byte$arrayString"
+                'C' -> "char$arrayString"
+                'D' -> "double$arrayString"
+                'F' -> "float$arrayString"
+                'I' -> "int$arrayString"
+                'J' -> "long$arrayString"
+                'L' -> "${name.substring(arraySymbolsCount + 1, name.length - 1)}$arrayString"
+                'S' -> "short$arrayString"
+                'Z' -> "boolean$arrayString"
+                else -> name
+            }
+        }
 
-    @NonNls
-    fun computePrettyName(name: String): String {
-      if (!name.startsWith('['))
-        return name
-      var arraySymbolsCount = 0
-      while (name.length > arraySymbolsCount && name[arraySymbolsCount] == '[')
-        arraySymbolsCount++
-      if (name.length <= arraySymbolsCount) {
-        // Malformed name
-        return name
-      }
-      val arrayType: Char = name[arraySymbolsCount]
-      val arrayString: String = "[]".repeat(arraySymbolsCount)
-      return when (arrayType) {
-        'B' -> "byte$arrayString"
-        'C' -> "char$arrayString"
-        'D' -> "double$arrayString"
-        'F' -> "float$arrayString"
-        'I' -> "int$arrayString"
-        'J' -> "long$arrayString"
-        'L' -> "${name.substring(arraySymbolsCount + 1, name.length - 1)}$arrayString"
-        'S' -> "short$arrayString"
-        'Z' -> "boolean$arrayString"
-        else -> name
-      }
+        val CLASS_FIELD: InstanceField = InstanceField("<class>", -1, Type.OBJECT)
     }
 
-    val CLASS_FIELD: InstanceField = InstanceField("<class>", -1, Type.OBJECT)
-  }
-
-  fun getSuperClass(classStore: ClassStore): ClassDefinition? {
-    return when (superClassId) {
-      0L -> null
-      else -> classStore[superClassId.toInt()]
+    fun getSuperClass(classStore: ClassStore): ClassDefinition? {
+        return when (superClassId) {
+            0L -> null
+            else -> classStore[superClassId.toInt()]
+        }
     }
-  }
 
-  override fun hashCode(): Int = id.hashCode()
+    override fun hashCode(): Int = id.hashCode()
 
-  fun isArray(): Boolean = name[0] == '['
+    fun isArray(): Boolean = name[0] == '['
 
-  fun isPrimitiveArray(): Boolean = isArray() && name.length == 2
+    fun isPrimitiveArray(): Boolean = isArray() && name.length == 2
 
-  fun copyWithRemappedIDs(remappingFunction: LongUnaryOperator): ClassDefinition {
-    fun map(id: Long): Long = remappingFunction.applyAsLong(id)
-    val newConstantFields = LongArray(constantFields.size) {
-      map(constantFields[it])
+    fun copyWithRemappedIDs(remappingFunction: LongUnaryOperator): ClassDefinition {
+        fun map(id: Long): Long = remappingFunction.applyAsLong(id)
+        val newConstantFields = LongArray(constantFields.size) {
+            map(constantFields[it])
+        }
+        val newStaticObjectFields = Array(objectStaticFields.size) {
+            val oldStaticField = objectStaticFields[it]
+            StaticField(oldStaticField.name, map(oldStaticField.value))
+        }
+        return ClassDefinition(
+                name, map(id), map(superClassId), map(classLoaderId), instanceSize, superClassOffset,
+                refInstanceFields, primitiveInstanceFields, newConstantFields, newStaticObjectFields, primitiveStaticFields
+        )
     }
-    val newStaticObjectFields = Array(objectStaticFields.size) {
-      val oldStaticField = objectStaticFields[it]
-      StaticField(oldStaticField.name, map(oldStaticField.value))
-    }
-    return ClassDefinition(
-      name, map(id), map(superClassId), map(classLoaderId), instanceSize, superClassOffset,
-      refInstanceFields, primitiveInstanceFields, newConstantFields, newStaticObjectFields, primitiveStaticFields
-    )
-  }
 
-  fun allRefFieldNames(classStore: ClassStore): List<String> {
-    val result = mutableListOf<String>()
-    var currentClass = this
-    do {
-      result.addAll(currentClass.refInstanceFields.map { it.name })
-      currentClass = currentClass.getSuperClass(classStore) ?: break
+    fun allRefFieldNames(classStore: ClassStore): List<String> {
+        val result = mutableListOf<String>()
+        var currentClass = this
+        do {
+            result.addAll(currentClass.refInstanceFields.map { it.name })
+            currentClass = currentClass.getSuperClass(classStore) ?: break
+        } while (true)
+        return result
     }
-    while (true)
-    return result
-  }
 
-  fun getRefField(classStore: ClassStore, index: Int): InstanceField {
-    var currentIndex = index
-    var currentClass = this
-    do {
-      val size = currentClass.refInstanceFields.size
-      if (currentIndex < size) {
-        return currentClass.refInstanceFields[currentIndex]
-      }
-      currentIndex -= size
-      currentClass = currentClass.getSuperClass(classStore) ?: break
+    fun getRefField(classStore: ClassStore, index: Int): InstanceField {
+        var currentIndex = index
+        var currentClass = this
+        do {
+            val size = currentClass.refInstanceFields.size
+            if (currentIndex < size) {
+                return currentClass.refInstanceFields[currentIndex]
+            }
+            currentIndex -= size
+            currentClass = currentClass.getSuperClass(classStore) ?: break
+        } while (true)
+        if (currentIndex == 0) {
+            return CLASS_FIELD
+        }
+        throw IndexOutOfBoundsException("$index on class $name")
     }
-    while (true)
-    if (currentIndex == 0) {
-      return CLASS_FIELD
-    }
-    throw IndexOutOfBoundsException("$index on class $name")
-  }
 
-  fun getClassFieldName(index: Int): String {
-    if (index in constantFields.indices) {
-      return "<constant>"
+    fun getClassFieldName(index: Int): String {
+        if (index in constantFields.indices) {
+            return "<constant>"
+        }
+        if (index in constantFields.size until constantFields.size + objectStaticFields.size) {
+            return objectStaticFields[index - constantFields.size].name
+        }
+        if (index == constantFields.size + objectStaticFields.size) {
+            return "<loader>"
+        }
+        throw IndexOutOfBoundsException("$index on class $name")
     }
-    if (index in constantFields.size until constantFields.size + objectStaticFields.size) {
-      return objectStaticFields[index - constantFields.size].name
-    }
-    if (index == constantFields.size + objectStaticFields.size) {
-      return "<loader>"
-    }
-    throw IndexOutOfBoundsException("$index on class $name")
-  }
 
-  fun getPrimitiveStaticFieldValue(name: String): Long? {
-    return primitiveStaticFields.find { it.name == name }?.value
-  }
-
-  /**
-   * Computes offset of a given field in the class (including superclasses)
-   * @return Offset of the field, or -1 if the field doesn't exist.
-   */
-  fun computeOffsetOfField(fieldName: String, classStore: ClassStore): Int {
-    var classOffset = 0
-    var currentClass = this
-    do {
-      var field = currentClass.refInstanceFields.find { it.name == fieldName }
-      if (field == null) {
-        field = currentClass.primitiveInstanceFields.find { it.name == fieldName }
-      }
-      if (field != null) {
-        return classOffset + field.offset
-      }
-      classOffset += currentClass.superClassOffset
-      currentClass = currentClass.getSuperClass(classStore) ?: return -1
+    fun getPrimitiveStaticFieldValue(name: String): Long? {
+        return primitiveStaticFields.find { it.name == name }?.value
     }
-    while (true)
-  }
 
-  fun copyWithName(newName: String): ClassDefinition {
-    return ClassDefinition(newName, id, superClassId, classLoaderId, instanceSize, superClassOffset, refInstanceFields, primitiveInstanceFields,
-                           constantFields, objectStaticFields, primitiveStaticFields)
-  }
+    /**
+     * Computes offset of a given field in the class (including superclasses)
+     * @return Offset of the field, or -1 if the field doesn't exist.
+     */
+    fun computeOffsetOfField(fieldName: String, classStore: ClassStore): Int {
+        var classOffset = 0
+        var currentClass = this
+        do {
+            var field = currentClass.refInstanceFields.find { it.name == fieldName }
+            if (field == null) {
+                field = currentClass.primitiveInstanceFields.find { it.name == fieldName }
+            }
+            if (field != null) {
+                return classOffset + field.offset
+            }
+            classOffset += currentClass.superClassOffset
+            currentClass = currentClass.getSuperClass(classStore) ?: return -1
+        } while (true)
+    }
+
+    fun copyWithName(newName: String): ClassDefinition {
+        return ClassDefinition(newName, id, superClassId, classLoaderId, instanceSize, superClassOffset, refInstanceFields, primitiveInstanceFields,
+                constantFields, objectStaticFields, primitiveStaticFields)
+    }
 }
 
 

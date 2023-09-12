@@ -20,21 +20,21 @@ import java.nio.channels.FileChannel
 
 class FileBackedUShortList(private val buffer: ByteBuffer) : UShortList {
 
-  override operator fun get(index: Int): Int {
-    buffer.position(index * 2)
-    return java.lang.Short.toUnsignedInt(buffer.short)
-  }
-
-  override operator fun set(index: Int, value: Int) {
-    assert(value in 0..65535)
-    buffer.position(index * 2)
-    buffer.putShort(value.toShort())
-  }
-
-  companion object {
-    fun createEmpty(channel: FileChannel, size: Long): UShortList {
-      FileBackedHashMap.createEmptyFile(channel, size * 2)
-      return FileBackedUShortList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+    override operator fun get(index: Int): Int {
+        buffer.position(index * 2)
+        return java.lang.Short.toUnsignedInt(buffer.short)
     }
-  }
+
+    override operator fun set(index: Int, value: Int) {
+        assert(value in 0..65535)
+        buffer.position(index * 2)
+        buffer.putShort(value.toShort())
+    }
+
+    companion object {
+        fun createEmpty(channel: FileChannel, size: Long): UShortList {
+            FileBackedHashMap.createEmptyFile(channel, size * 2)
+            return FileBackedUShortList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+        }
+    }
 }

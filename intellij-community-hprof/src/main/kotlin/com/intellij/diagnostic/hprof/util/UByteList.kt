@@ -16,6 +16,6 @@
 package com.intellij.diagnostic.hprof.util
 
 interface UByteList {
-  operator fun get(index: Int): Int
-  operator fun set(index: Int, value: Int)
+    operator fun get(index: Int): Int
+    operator fun set(index: Int, value: Int)
 }

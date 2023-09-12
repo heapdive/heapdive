@@ -16,6 +16,6 @@
 package com.intellij.diagnostic.hprof.parser
 
 interface VisitorContext {
-  val currentHeapRecordOffset: Long
-  val idSize: Int
+    val currentHeapRecordOffset: Long
+    val idSize: Int
 }

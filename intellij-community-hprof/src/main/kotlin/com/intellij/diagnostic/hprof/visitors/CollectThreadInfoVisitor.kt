@@ -23,66 +23,63 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 
 class CollectThreadInfoVisitor(private val threadsMap: Long2ObjectMap<ThreadInfo>,
                                private val stringIdMap: Long2ObjectMap<String>) : HProfVisitor() {
-  private val stackFrameIdToStringMap = Long2ObjectOpenHashMap<String>()
-  private val classSerialNumberToNameMap = Long2ObjectOpenHashMap<String>()
+    private val stackFrameIdToStringMap = Long2ObjectOpenHashMap<String>()
+    private val classSerialNumberToNameMap = Long2ObjectOpenHashMap<String>()
 
-  override fun preVisit() {
-    disableAll()
-    enable(RecordType.StackFrame)
-    enable(RecordType.StackTrace)
-    enable(RecordType.LoadClass)
-  }
+    override fun preVisit() {
+        disableAll()
+        enable(RecordType.StackFrame)
+        enable(RecordType.StackTrace)
+        enable(RecordType.LoadClass)
+    }
 
-  override fun visitLoadClass(classSerialNumber: Long, classObjectId: Long, stackSerialNumber: Long, classNameStringId: Long) {
-    classSerialNumberToNameMap.put(classSerialNumber, stringIdMap[classNameStringId].replace("/", "."))
-  }
+    override fun visitLoadClass(classSerialNumber: Long, classObjectId: Long, stackSerialNumber: Long, classNameStringId: Long) {
+        classSerialNumberToNameMap.put(classSerialNumber, stringIdMap[classNameStringId].replace("/", "."))
+    }
 
-  override fun visitStackFrame(stackFrameId: Long,
-                               methodNameStringId: Long,
-                               methodSignatureStringId: Long,
-                               sourceFilenameStringId: Long,
-                               classSerialNumber: Long,
-                               lineNumber: Int) {
-    stackFrameIdToStringMap.put(stackFrameId, getStackFrameString(methodNameStringId, sourceFilenameStringId,
-                                                                  classSerialNumber, lineNumber))
-  }
+    override fun visitStackFrame(stackFrameId: Long,
+                                 methodNameStringId: Long,
+                                 methodSignatureStringId: Long,
+                                 sourceFilenameStringId: Long,
+                                 classSerialNumber: Long,
+                                 lineNumber: Int) {
+        stackFrameIdToStringMap.put(stackFrameId, getStackFrameString(methodNameStringId, sourceFilenameStringId,
+                classSerialNumber, lineNumber))
+    }
 
-  private fun getStackFrameString(methodNameStringId: Long,
-                                  sourceFilenameStringId: Long,
-                                  classSerialNumber: Long,
-                                  lineNumber: Int): String {
-    val sb = StringBuilder()
-    if (classSerialNumber != 0L) {
-      sb.append(classSerialNumberToNameMap[classSerialNumber])
-      sb.append(".")
-      if (methodNameStringId != 0L) {
-        sb.append(stringIdMap[methodNameStringId])
-      }
-      else {
-        sb.append("<unknown method>")
-      }
+    private fun getStackFrameString(methodNameStringId: Long,
+                                    sourceFilenameStringId: Long,
+                                    classSerialNumber: Long,
+                                    lineNumber: Int): String {
+        val sb = StringBuilder()
+        if (classSerialNumber != 0L) {
+            sb.append(classSerialNumberToNameMap[classSerialNumber])
+            sb.append(".")
+            if (methodNameStringId != 0L) {
+                sb.append(stringIdMap[methodNameStringId])
+            } else {
+                sb.append("<unknown method>")
+            }
+        } else {
+            sb.append("<unknown location>")
+        }
+        if (lineNumber == -1) {
+            sb.append("(Native method)")
+        } else if (sourceFilenameStringId != 0L) {
+            sb.append("(${stringIdMap[sourceFilenameStringId]}")
+            if (lineNumber > 0) {
+                sb.append(":$lineNumber")
+            }
+            sb.append(")")
+        }
+        return sb.toString()
     }
-    else {
-      sb.append("<unknown location>")
-    }
-    if (lineNumber == -1) {
-      sb.append("(Native method)")
-    }
-    else if (sourceFilenameStringId != 0L) {
-      sb.append("(${stringIdMap[sourceFilenameStringId]}")
-      if (lineNumber > 0) {
-        sb.append(":$lineNumber")
-      }
-      sb.append(")")
-    }
-    return sb.toString()
-  }
 
-  override fun visitStackTrace(stackTraceSerialNumber: Long, threadSerialNumber: Long, numberOfFrames: Int, stackFrameIds: LongArray) {
-    val frames = ArrayList<String>(stackFrameIds.size)
-    for (id in stackFrameIds) {
-      frames.add(stackFrameIdToStringMap[id])
+    override fun visitStackTrace(stackTraceSerialNumber: Long, threadSerialNumber: Long, numberOfFrames: Int, stackFrameIds: LongArray) {
+        val frames = ArrayList<String>(stackFrameIds.size)
+        for (id in stackFrameIds) {
+            frames.add(stackFrameIdToStringMap[id])
+        }
+        threadsMap.put(threadSerialNumber, ThreadInfo(frames))
     }
-    threadsMap.put(threadSerialNumber, ThreadInfo(frames))
-  }
 }

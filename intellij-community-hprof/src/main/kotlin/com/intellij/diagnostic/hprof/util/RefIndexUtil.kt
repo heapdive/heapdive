@@ -20,26 +20,26 @@ import com.intellij.diagnostic.hprof.classstore.ClassStore
 
 object RefIndexUtil {
 
-  fun getFieldDescription(refIndex: Int,
-                          classDefinition: ClassDefinition?,
-                          classStore: ClassStore): String? {
-    return when (refIndex) {
-      ROOT -> "(root)"
-      SOFT_REFERENCE -> "(soft)"
-      WEAK_REFERENCE -> "(weak)"
-      ARRAY_ELEMENT -> "[]"
-      DISPOSER_CHILD -> "(disposer-tree)"
-      FIELD_OMITTED -> null
-      else -> classDefinition?.getRefField(classStore, refIndex - 1)?.name ?: "(field_$refIndex)"
+    fun getFieldDescription(refIndex: Int,
+                            classDefinition: ClassDefinition?,
+                            classStore: ClassStore): String? {
+        return when (refIndex) {
+            ROOT -> "(root)"
+            SOFT_REFERENCE -> "(soft)"
+            WEAK_REFERENCE -> "(weak)"
+            ARRAY_ELEMENT -> "[]"
+            DISPOSER_CHILD -> "(disposer-tree)"
+            FIELD_OMITTED -> null
+            else -> classDefinition?.getRefField(classStore, refIndex - 1)?.name ?: "(field_$refIndex)"
+        }
     }
-  }
 
-  const val FIELD_OMITTED: Int = 0
-  const val MAX_FIELD_INDEX: Int = 250
+    const val FIELD_OMITTED: Int = 0
+    const val MAX_FIELD_INDEX: Int = 250
 
-  const val ROOT: Int = 251
-  const val SOFT_REFERENCE: Int = 252
-  const val WEAK_REFERENCE: Int = 253
-  const val ARRAY_ELEMENT: Int = 254
-  const val DISPOSER_CHILD: Int = 255
+    const val ROOT: Int = 251
+    const val SOFT_REFERENCE: Int = 252
+    const val WEAK_REFERENCE: Int = 253
+    const val ARRAY_ELEMENT: Int = 254
+    const val DISPOSER_CHILD: Int = 255
 }

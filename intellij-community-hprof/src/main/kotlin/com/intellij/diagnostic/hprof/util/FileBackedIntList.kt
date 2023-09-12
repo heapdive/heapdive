@@ -20,20 +20,20 @@ import java.nio.channels.FileChannel
 
 class FileBackedIntList(private val buffer: ByteBuffer) : IntList {
 
-  override operator fun get(index: Int): Int {
-    buffer.position(index * 4)
-    return buffer.int
-  }
-
-  override operator fun set(index: Int, value: Int) {
-    buffer.position(index * 4)
-    buffer.putInt(value)
-  }
-
-  companion object {
-    fun createEmpty(channel: FileChannel, size: Long): IntList {
-      FileBackedHashMap.createEmptyFile(channel, size * 4)
-      return FileBackedIntList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+    override operator fun get(index: Int): Int {
+        buffer.position(index * 4)
+        return buffer.int
     }
-  }
+
+    override operator fun set(index: Int, value: Int) {
+        buffer.position(index * 4)
+        buffer.putInt(value)
+    }
+
+    companion object {
+        fun createEmpty(channel: FileChannel, size: Long): IntList {
+            FileBackedHashMap.createEmptyFile(channel, size * 4)
+            return FileBackedIntList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+        }
+    }
 }

@@ -20,19 +20,19 @@ import java.nio.channels.FileChannel
 
 class FileBackedUByteList(private val buffer: ByteBuffer) : UByteList {
 
-  override operator fun get(index: Int): Int {
-    return java.lang.Byte.toUnsignedInt(buffer.get(index))
-  }
-
-  override operator fun set(index: Int, value: Int) {
-    assert(value in 0..255)
-    buffer.put(index, value.toByte())
-  }
-
-  companion object {
-    fun createEmpty(channel: FileChannel, size: Long): UByteList {
-      FileBackedHashMap.createEmptyFile(channel, size)
-      return FileBackedUByteList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+    override operator fun get(index: Int): Int {
+        return java.lang.Byte.toUnsignedInt(buffer.get(index))
     }
-  }
+
+    override operator fun set(index: Int, value: Int) {
+        assert(value in 0..255)
+        buffer.put(index, value.toByte())
+    }
+
+    companion object {
+        fun createEmpty(channel: FileChannel, size: Long): UByteList {
+            FileBackedHashMap.createEmptyFile(channel, size)
+            return FileBackedUByteList(channel.map(FileChannel.MapMode.READ_WRITE, 0, channel.size()))
+        }
+    }
 }

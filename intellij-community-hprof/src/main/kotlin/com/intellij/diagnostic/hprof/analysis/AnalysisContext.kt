@@ -25,16 +25,16 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongArrayList
 
 class AnalysisContext(
-  val navigator: ObjectNavigator,
-  val config: AnalysisConfig,
-  val parentList: IntList,
-  val sizesList: IntList,
-  val visitedList: IntList,
-  val refIndexList: UByteList,
-  var histogram: Histogram
+        val navigator: ObjectNavigator,
+        val config: AnalysisConfig,
+        val parentList: IntList,
+        val sizesList: IntList,
+        val visitedList: IntList,
+        val refIndexList: UByteList,
+        var histogram: Histogram
 ) {
-  val classStore: ClassStore = navigator.classStore
-  val disposedObjectsIDs: IntOpenHashSet = IntOpenHashSet()
-  val disposerParentToChildren: Long2ObjectOpenHashMap<LongArrayList> = Long2ObjectOpenHashMap<LongArrayList>()
-  var disposerTreeObjectId: Int = 0
+    val classStore: ClassStore = navigator.classStore
+    val disposedObjectsIDs: IntOpenHashSet = IntOpenHashSet()
+    val disposerParentToChildren: Long2ObjectOpenHashMap<LongArrayList> = Long2ObjectOpenHashMap<LongArrayList>()
+    var disposerTreeObjectId: Int = 0
 }

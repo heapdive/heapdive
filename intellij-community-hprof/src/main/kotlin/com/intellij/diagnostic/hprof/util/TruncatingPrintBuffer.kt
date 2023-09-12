@@ -16,52 +16,52 @@
 package com.intellij.diagnostic.hprof.util
 
 import java.io.Closeable
-import java.util.*
+import java.util.LinkedList
+import java.util.Queue
 
 class TruncatingPrintBuffer(
-  private val headLimit: Int,
-  private val tailLimit: Int,
-  private val printFunc: (String) -> Any
+        private val headLimit: Int,
+        private val tailLimit: Int,
+        private val printFunc: (String) -> Any
 ) : Closeable {
-  private val queue: Queue<String> = LinkedList()
-  private var linesPrinted = 0
-  private var linesLost = 0
-  private var closed = false
+    private val queue: Queue<String> = LinkedList()
+    private var linesPrinted = 0
+    private var linesLost = 0
+    private var closed = false
 
-  override fun close() {
-    if (closed) return
-    closed = true
+    override fun close() {
+        if (closed) return
+        closed = true
 
-    if (linesLost > 0) {
-      while (queue.size > tailLimit) {
-        queue.remove()
-        linesLost++
-      }
-      assert(linesLost > 1)
-      printFunc("[...removed $linesLost lines...]")
+        if (linesLost > 0) {
+            while (queue.size > tailLimit) {
+                queue.remove()
+                linesLost++
+            }
+            assert(linesLost > 1)
+            printFunc("[...removed $linesLost lines...]")
+        }
+        queue.forEach {
+            printFunc(it)
+        }
+        queue.clear()
     }
-    queue.forEach {
-      printFunc(it)
-    }
-    queue.clear()
-  }
 
-  fun println() {
-    println("")
-  }
+    fun println() {
+        println("")
+    }
 
-  fun println(s: String) {
-    if (closed) throw IllegalStateException()
-    if (linesPrinted < headLimit) {
-      printFunc(s)
-      linesPrinted++
+    fun println(s: String) {
+        if (closed) throw IllegalStateException()
+        if (linesPrinted < headLimit) {
+            printFunc(s)
+            linesPrinted++
+        } else {
+            queue.add(s)
+            if (queue.size > tailLimit + 1) {
+                queue.remove()
+                linesLost++
+            }
+        }
     }
-    else {
-      queue.add(s)
-      if (queue.size > tailLimit + 1) {
-        queue.remove()
-        linesLost++
-      }
-    }
-  }
 }

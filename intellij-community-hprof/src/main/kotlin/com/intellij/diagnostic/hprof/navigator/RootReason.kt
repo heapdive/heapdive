@@ -20,40 +20,40 @@ import com.intellij.diagnostic.hprof.classstore.ClassDefinition
 class RootReason
 private constructor(val description: String, val javaFrame: Boolean = false) {
 
-  companion object {
-    fun createConstantReferenceReason(classDefinition: ClassDefinition, constantNumber: Int): RootReason {
-      return RootReason("Class constant: ${classDefinition.name}.#$constantNumber")
-    }
+    companion object {
+        fun createConstantReferenceReason(classDefinition: ClassDefinition, constantNumber: Int): RootReason {
+            return RootReason("Class constant: ${classDefinition.name}.#$constantNumber")
+        }
 
-    fun createStaticFieldReferenceReason(classDefinition: ClassDefinition, staticFieldName: String): RootReason {
-      return RootReason("Static field: ${classDefinition.name}.$staticFieldName")
-    }
+        fun createStaticFieldReferenceReason(classDefinition: ClassDefinition, staticFieldName: String): RootReason {
+            return RootReason("Static field: ${classDefinition.name}.$staticFieldName")
+        }
 
-    fun createClassDefinitionReason(classDefinition: ClassDefinition): RootReason {
-      return RootReason("Class definition: ${classDefinition.name}")
-    }
+        fun createClassDefinitionReason(classDefinition: ClassDefinition): RootReason {
+            return RootReason("Class definition: ${classDefinition.name}")
+        }
 
-    fun createJavaFrameReason(frameDescription: String): RootReason {
-      return RootReason("Java Frame: $frameDescription", true)
-    }
+        fun createJavaFrameReason(frameDescription: String): RootReason {
+            return RootReason("Java Frame: $frameDescription", true)
+        }
 
-    val rootUnknown: RootReason = RootReason(
-      "Unknown")
-    val rootGlobalJNI: RootReason = RootReason(
-      "Global JNI")
-    val rootLocalJNI: RootReason = RootReason(
-      "Local JNI")
-    val rootNativeStack: RootReason = RootReason(
-      "Native stack")
-    val rootStickyClass: RootReason = RootReason(
-      "Sticky class")
-    val rootThreadBlock: RootReason = RootReason(
-      "Thread block")
-    val rootThreadObject: RootReason = RootReason(
-      "Thread object")
-    val rootMonitorUsed: RootReason = RootReason(
-      "Monitor used")
-  }
+        val rootUnknown: RootReason = RootReason(
+                "Unknown")
+        val rootGlobalJNI: RootReason = RootReason(
+                "Global JNI")
+        val rootLocalJNI: RootReason = RootReason(
+                "Local JNI")
+        val rootNativeStack: RootReason = RootReason(
+                "Native stack")
+        val rootStickyClass: RootReason = RootReason(
+                "Sticky class")
+        val rootThreadBlock: RootReason = RootReason(
+                "Thread block")
+        val rootThreadObject: RootReason = RootReason(
+                "Thread object")
+        val rootMonitorUsed: RootReason = RootReason(
+                "Monitor used")
+    }
 }
 
 

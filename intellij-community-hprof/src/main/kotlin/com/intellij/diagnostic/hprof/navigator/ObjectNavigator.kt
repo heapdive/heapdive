@@ -26,89 +26,89 @@ import java.nio.channels.FileChannel
 
 abstract class ObjectNavigator(val classStore: ClassStore, val instanceCount: Long) {
 
-  enum class ReferenceResolution {
-    ALL_REFERENCES,
-    ONLY_STRONG_REFERENCES,
-    NO_REFERENCES
-  }
-
-  data class RootObject(val id: Long, val reason: RootReason)
-
-  class NavigationException(message: String) : RuntimeException(message)
-
-  abstract val id: Long
-
-  abstract fun createRootsIterator(): Iterator<RootObject>
-
-  abstract fun goTo(id: Long, referenceResolution: ReferenceResolution = ReferenceResolution.ONLY_STRONG_REFERENCES)
-
-  abstract fun getClass(): ClassDefinition
-
-  abstract fun getReferencesCopy(): LongList
-  abstract fun copyReferencesTo(outReferences: LongList)
-
-  abstract fun getClassForObjectId(id: Long): ClassDefinition
-  abstract fun getRootReasonForObjectId(id: Long): RootReason?
-
-  abstract fun getObjectSize(): Int
-
-  abstract fun getSoftReferenceId(): Long
-  abstract fun getWeakReferenceId(): Long
-  abstract fun getSoftWeakReferenceIndex(): Int
-
-  fun goToInstanceField(@NonNls className: String?, @NonNls fieldName: String) {
-    val objectId = getInstanceFieldObjectId(className, fieldName)
-    goTo(objectId, ReferenceResolution.ALL_REFERENCES)
-  }
-
-  fun getInstanceFieldObjectId(@NonNls className: String?, @NonNls name: String): Long {
-    val refs = getReferencesCopy()
-    if (className != null && className != getClass().undecoratedName) {
-      throw NavigationException("Expected $className, got ${getClass().undecoratedName}")
+    enum class ReferenceResolution {
+        ALL_REFERENCES,
+        ONLY_STRONG_REFERENCES,
+        NO_REFERENCES
     }
-    val indexOfField = getClass().allRefFieldNames(classStore).indexOfFirst { it == name }
-    if (indexOfField == -1) {
-      throw NavigationException("Missing field $name in ${getClass().name}")
+
+    data class RootObject(val id: Long, val reason: RootReason)
+
+    class NavigationException(message: String) : RuntimeException(message)
+
+    abstract val id: Long
+
+    abstract fun createRootsIterator(): Iterator<RootObject>
+
+    abstract fun goTo(id: Long, referenceResolution: ReferenceResolution = ReferenceResolution.ONLY_STRONG_REFERENCES)
+
+    abstract fun getClass(): ClassDefinition
+
+    abstract fun getReferencesCopy(): LongList
+    abstract fun copyReferencesTo(outReferences: LongList)
+
+    abstract fun getClassForObjectId(id: Long): ClassDefinition
+    abstract fun getRootReasonForObjectId(id: Long): RootReason?
+
+    abstract fun getObjectSize(): Int
+
+    abstract fun getSoftReferenceId(): Long
+    abstract fun getWeakReferenceId(): Long
+    abstract fun getSoftWeakReferenceIndex(): Int
+
+    fun goToInstanceField(@NonNls className: String?, @NonNls fieldName: String) {
+        val objectId = getInstanceFieldObjectId(className, fieldName)
+        goTo(objectId, ReferenceResolution.ALL_REFERENCES)
     }
-    return refs.getLong(indexOfField)
-  }
 
-  fun goToStaticField(@NonNls className: String, @NonNls fieldName: String) {
-    val objectId = getStaticFieldObjectId(className, fieldName)
-    goTo(objectId, ReferenceResolution.ALL_REFERENCES)
-  }
-
-  private fun getStaticFieldObjectId(className: String, fieldName: String): Long {
-    val staticField =
-      classStore[className].objectStaticFields.firstOrNull { it.name == fieldName }
-      ?: throw NavigationException("Missing static field $fieldName in class $className")
-    return staticField.value
-  }
-
-  companion object {
-    fun createOnAuxiliaryFiles(parser: HProfEventBasedParser,
-                               auxOffsetsChannel: FileChannel,
-                               auxChannel: FileChannel,
-                               hprofMetadata: HProfMetadata,
-                               instanceCount: Long): ObjectNavigator {
-      val createAuxiliaryFilesVisitor = CreateAuxiliaryFilesVisitor(auxOffsetsChannel, auxChannel, hprofMetadata.classStore, parser)
-
-      parser.accept(createAuxiliaryFilesVisitor, "auxFiles")
-
-      val auxBuffer = auxChannel.map(FileChannel.MapMode.READ_ONLY, 0, auxChannel.size())
-      val auxOffsetsBuffer =
-        auxOffsetsChannel.map(FileChannel.MapMode.READ_ONLY, 0, auxOffsetsChannel.size())
-
-      return ObjectNavigatorOnAuxFiles(hprofMetadata.roots, auxOffsetsBuffer, auxBuffer, hprofMetadata.classStore, instanceCount,
-                                       parser.idSize)
+    fun getInstanceFieldObjectId(@NonNls className: String?, @NonNls name: String): Long {
+        val refs = getReferencesCopy()
+        if (className != null && className != getClass().undecoratedName) {
+            throw NavigationException("Expected $className, got ${getClass().undecoratedName}")
+        }
+        val indexOfField = getClass().allRefFieldNames(classStore).indexOfFirst { it == name }
+        if (indexOfField == -1) {
+            throw NavigationException("Missing field $name in ${getClass().name}")
+        }
+        return refs.getLong(indexOfField)
     }
-  }
 
-  abstract fun isNull(): Boolean
+    fun goToStaticField(@NonNls className: String, @NonNls fieldName: String) {
+        val objectId = getStaticFieldObjectId(className, fieldName)
+        goTo(objectId, ReferenceResolution.ALL_REFERENCES)
+    }
 
-  // Some objects may have additional data (varies by type). Only available when referenceResolution != NO_REFERENCES.
-  abstract fun getExtraData(): Int
+    private fun getStaticFieldObjectId(className: String, fieldName: String): Long {
+        val staticField =
+                classStore[className].objectStaticFields.firstOrNull { it.name == fieldName }
+                        ?: throw NavigationException("Missing static field $fieldName in class $className")
+        return staticField.value
+    }
 
-  abstract fun getStringInstanceFieldValue(): String?
+    companion object {
+        fun createOnAuxiliaryFiles(parser: HProfEventBasedParser,
+                                   auxOffsetsChannel: FileChannel,
+                                   auxChannel: FileChannel,
+                                   hprofMetadata: HProfMetadata,
+                                   instanceCount: Long): ObjectNavigator {
+            val createAuxiliaryFilesVisitor = CreateAuxiliaryFilesVisitor(auxOffsetsChannel, auxChannel, hprofMetadata.classStore, parser)
+
+            parser.accept(createAuxiliaryFilesVisitor, "auxFiles")
+
+            val auxBuffer = auxChannel.map(FileChannel.MapMode.READ_ONLY, 0, auxChannel.size())
+            val auxOffsetsBuffer =
+                    auxOffsetsChannel.map(FileChannel.MapMode.READ_ONLY, 0, auxOffsetsChannel.size())
+
+            return ObjectNavigatorOnAuxFiles(hprofMetadata.roots, auxOffsetsBuffer, auxBuffer, hprofMetadata.classStore, instanceCount,
+                    parser.idSize)
+        }
+    }
+
+    abstract fun isNull(): Boolean
+
+    // Some objects may have additional data (varies by type). Only available when referenceResolution != NO_REFERENCES.
+    abstract fun getExtraData(): Int
+
+    abstract fun getStringInstanceFieldValue(): String?
 }
 

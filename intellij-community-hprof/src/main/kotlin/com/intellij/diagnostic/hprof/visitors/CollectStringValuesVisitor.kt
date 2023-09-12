@@ -20,13 +20,13 @@ import com.intellij.diagnostic.hprof.parser.RecordType
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 
 internal class CollectStringValuesVisitor(val output: Long2ObjectMap<String>) : HProfVisitor() {
-  override fun preVisit() {
-    disableAll()
-    enable(RecordType.StringInUTF8)
-  }
+    override fun preVisit() {
+        disableAll()
+        enable(RecordType.StringInUTF8)
+    }
 
-  override fun visitStringInUTF8(id: Long, s: String) {
-    assert(output.get(id) == null)
-    output.put(id, s)
-  }
+    override fun visitStringInUTF8(id: Long, s: String) {
+        assert(output.get(id) == null)
+        output.put(id, s)
+    }
 }
