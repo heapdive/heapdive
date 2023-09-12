@@ -18,19 +18,9 @@ package heapdive.html
 
 import com.intellij.openapi.progress.ProgressIndicator
 import org.slf4j.LoggerFactory
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 
 class AnalyzerProgressIndicator : ProgressIndicator() {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val myStartMillis = System.currentTimeMillis()
-    private val myFormat: DateFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.US)
-
-    init {
-        myFormat.timeZone = TimeZone.getTimeZone("UTC")
-    }
 
     override var text: String
         get() = super.text
@@ -45,12 +35,4 @@ class AnalyzerProgressIndicator : ProgressIndicator() {
             super.text2 = text
             logger.info("  $text")
         }
-
-    private fun print(text: String) {
-        var elapsedMs = System.currentTimeMillis() - myStartMillis
-        if (elapsedMs < 0) {
-            elapsedMs = 0
-        }
-        logger.info("[${myFormat.format(elapsedMs)}] $text")
-    }
 }
