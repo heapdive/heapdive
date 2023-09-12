@@ -23,11 +23,8 @@ jobs:
         run: ./gradlew -PreleaseVersion=${{github.event.release.tag_name}} :heapdive-cli:build
 
       - name: Upload JAR to Release
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./heapdive-cli/build/libs/heapdive-cli-${{ github.event.release.tag_name }}-all.jar
-          asset_name: heapdive-cli-${{ github.event.release.tag_name }}.jar
-          asset_content_type: application/java-archive
+          files: ./heapdive-cli/build/libs/heapdive-cli-${{ github.event.release.tag_name }}-all.jar
