@@ -12,10 +12,10 @@
             - Calculate the sum of instances for each class.
         - Use ClassNomination to find heavy classes
         - Ignore following packages.
-            - java.
-            - com.google.common.
-            - kotlin.
-            - com.intellij.util.
+            - `java.`
+            - `com.google.common.`
+            - `kotlin.`
+            - `com.intellij.util.`
     - Create id mapping file
         - Create RemapIDsVisitor
             - remap IDs for each object
