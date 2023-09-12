@@ -19,6 +19,13 @@ package heapdive.html
 import java.nio.charset.StandardCharsets
 
 fun rewriteTemplate(template: String, reportBody: String): String {
+    val classLoader = AnalyzerProgressIndicator::class.java.classLoader
+    fun readResource(name: String): String {
+        val stream = classLoader.getResourceAsStream(name)
+        checkNotNull(stream) { "$name is not available in ClassLoader resource" }
+        return stream.readAllBytes().toString(StandardCharsets.UTF_8)
+    }
+
     return template.replace("""<!-- BEGIN_REPORT -->.*?<!-- END_REPORT -->""".toRegex(RegexOption.DOT_MATCHES_ALL)) {
         """
         <script type="text/javascript">
@@ -26,8 +33,11 @@ fun rewriteTemplate(template: String, reportBody: String): String {
         </script>
         
         <script type="text/javascript">
-        ${AnalyzerProgressIndicator::class.java.classLoader.getResourceAsStream("static/main.bundle.js")!!.readAllBytes().toString(StandardCharsets.UTF_8)}
+        ${readResource("static/main.bundle.js")}
         </script>
+        <style>
+        ${readResource("static/styles.css")}
+        </style>
         """.trimIndent()
     }
 }

@@ -52,6 +52,8 @@ class HeapdiveController(
         val uploadUrl = uriComponentsBuilder.path("/upload").build().toUriString()
         model.addAttribute("uploadUrl", uploadUrl)
 
+        model.addAttribute("cacheKey", cacheKey)
+
         return "top"
     }
 

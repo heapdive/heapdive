@@ -15,6 +15,7 @@
  */
 
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: './frontend/index.jsx',
@@ -32,9 +33,9 @@ module.exports = {
                 }
             },
             {
-                test: /\.css/,
+                test: /\.css$/,
                 use: [
-                    "style-loader",
+                    MiniCssExtractPlugin.loader, // replaces 'style-loader'
                     {
                         loader: "css-loader",
                         options: {url: true}
@@ -43,6 +44,11 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'styles.css',
+        }),
+    ],
     resolve: {
         extensions: ['.js', '.jsx', ".css"]
     },
