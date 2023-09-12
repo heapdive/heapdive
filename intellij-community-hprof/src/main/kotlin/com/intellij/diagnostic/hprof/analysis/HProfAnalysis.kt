@@ -40,10 +40,6 @@ class HProfAnalysis(private val hprofFileChannel: FileChannel,
                     private val tempFilenameSupplier: TempFilenameSupplier,
                     private val analysisCallback: (AnalysisContext, ListProvider, ProgressIndicator) -> String) {
 
-    interface TempFilenameSupplier {
-        fun getTempFilePath(type: String): Path
-    }
-
     private data class TempFile(
             val type: String,
             val path: Path,
