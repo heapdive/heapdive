@@ -29,7 +29,6 @@ import com.intellij.diagnostic.hprof.util.PartialProgressIndicator
 import com.intellij.diagnostic.hprof.util.RefIndexUtil
 import com.intellij.diagnostic.hprof.util.TruncatingPrintBuffer
 import com.intellij.diagnostic.hprof.visitors.HistogramVisitor
-import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
 import heapdive.html.model.DominatorFlameGraph
@@ -44,6 +43,7 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 import it.unimi.dsi.fastutil.ints.IntSet
 import it.unimi.dsi.fastutil.longs.LongArrayList
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
+import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintWriter
@@ -952,6 +952,6 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
     }
 
     companion object {
-        private val LOG = Logger.getInstance(AnalyzeHtmlReport::class.java)
+        private val LOG = LoggerFactory.getLogger(AnalyzeHtmlReport::class.java)
     }
 }

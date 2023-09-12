@@ -17,8 +17,8 @@ package com.intellij.diagnostic.hprof.parser
 
 import com.intellij.diagnostic.hprof.util.HProfReadBuffer
 import com.intellij.diagnostic.hprof.util.HProfReadBufferSlidingWindow
-import com.intellij.openapi.diagnostic.Logger
 import heapdive.utils.Stopwatch
+import org.slf4j.LoggerFactory
 import java.io.EOFException
 import java.io.IOException
 import java.nio.channels.FileChannel
@@ -27,7 +27,7 @@ import java.util.function.LongUnaryOperator
 
 class HProfEventBasedParser(fileChannel: FileChannel) : AutoCloseable {
     companion object {
-        private val LOG = Logger.getInstance(HProfEventBasedParser::class.java)
+        private val LOG = LoggerFactory.getLogger(HProfEventBasedParser::class.java)
     }
 
     var idSize: Int = 0
