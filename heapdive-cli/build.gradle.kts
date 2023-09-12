@@ -32,8 +32,6 @@ dependencies {
 
     implementation(libs.fastutil)
 
-    implementation(libs.guava)
-
     implementation(libs.logback)
     implementation(libs.slf4j)
 

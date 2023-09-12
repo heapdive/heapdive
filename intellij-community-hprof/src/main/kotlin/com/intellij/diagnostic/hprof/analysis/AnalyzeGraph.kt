@@ -15,7 +15,6 @@
  */
 package com.intellij.diagnostic.hprof.analysis
 
-import com.google.common.base.Stopwatch
 import com.intellij.diagnostic.DiagnosticBundle
 import com.intellij.diagnostic.hprof.classstore.ClassDefinition
 import com.intellij.diagnostic.hprof.histogram.Histogram
@@ -35,6 +34,7 @@ import com.intellij.diagnostic.hprof.visitors.HistogramVisitor
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
+import heapdive.utils.Stopwatch
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet

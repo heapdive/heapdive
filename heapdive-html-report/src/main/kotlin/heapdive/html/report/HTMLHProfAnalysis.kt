@@ -16,7 +16,6 @@
  */
 package heapdive.html.report
 
-import com.google.common.base.Stopwatch
 import com.intellij.diagnostic.hprof.action.SystemTempFilenameSupplier
 import com.intellij.diagnostic.hprof.analysis.AnalysisConfig
 import com.intellij.diagnostic.hprof.analysis.AnalysisContext
@@ -36,12 +35,12 @@ import heapdive.html.model.HProfAnalysisReport
 import heapdive.html.model.HProfReport
 import heapdive.html.model.MetaInfo
 import heapdive.html.model.SimpleHProfReport
+import heapdive.utils.Stopwatch
 import org.jetbrains.annotations.NonNls
 import java.nio.channels.FileChannel
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import java.util.concurrent.TimeUnit
 
 class HTMLHProfAnalysis(private val hprofFileChannel: FileChannel,
                         private val tempFilenameSupplier: SystemTempFilenameSupplier,
@@ -156,9 +155,9 @@ class HTMLHProfAnalysis(private val hprofFileChannel: FileChannel,
             analysisStopwatch.stop()
 
             val metaInfo = MetaInfo(
-                    prepareFilesStopwatch.elapsed(TimeUnit.MILLISECONDS),
-                    analysisStopwatch.elapsed(TimeUnit.MILLISECONDS),
-                    totalStopwatch.elapsed(TimeUnit.MILLISECONDS),
+                    prepareFilesStopwatch.elapsedMillis(),
+                    analysisStopwatch.elapsedMillis(),
+                    totalStopwatch.elapsedMillis(),
                     mapOf("heapdump" to hprofFileChannel.size())
                             + tempFiles.map { it.type to it.channel.size() }
             )

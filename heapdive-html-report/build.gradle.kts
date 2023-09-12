@@ -30,7 +30,6 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.slf4j)
 
-    implementation(libs.guava)
     implementation(libs.fastutil)
 
     implementation(libs.kotlinx.cli)

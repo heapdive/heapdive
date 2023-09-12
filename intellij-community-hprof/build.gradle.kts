@@ -8,7 +8,6 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.slf4j)
 
-    implementation(libs.guava) // used for Stopwatch
     implementation(libs.fastutil)
 
     testImplementation(platform(libs.junit.bom))

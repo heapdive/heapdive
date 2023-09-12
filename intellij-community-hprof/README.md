@@ -13,9 +13,9 @@ This code base is taken from git hash 3a08ca3f08a6bed769f554b6edb27918cd1def62.
     mkdir -p intellij-community-hprof/src/main/kotlin/com/intellij/diagnostic/hprof
     cp -a ../intellij-community/platform/platform-impl/src/com/intellij/diagnostic/hprof/* intellij-community-hprof/src/main/kotlin/com/intellij/diagnostic/hprof 
 
-Add fastutil and guava as dependencies.
+Add fastutil as dependencies.
 
-And I done the following process:
+And I'm done the following process:
 
 - Use org.slf4j.Logger instead of com.intellij.openapi.diagnostic.Logger
 - Do the following process for each package:
@@ -34,3 +34,4 @@ And I done the following process:
     - util
         - HProfReadBufferSliding depends on ByteBufferCleaner. Copy from the original source.
     - visitors
+- Rewrite guava's stopwatch(Since it's the only 1 used class from guava)

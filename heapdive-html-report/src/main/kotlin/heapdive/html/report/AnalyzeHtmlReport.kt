@@ -16,7 +16,6 @@
  */
 package heapdive.html.report
 
-import com.google.common.base.Stopwatch
 import com.intellij.diagnostic.DiagnosticBundle
 import com.intellij.diagnostic.hprof.analysis.AnalysisContext
 import com.intellij.diagnostic.hprof.analysis.GCRootPathsTree
@@ -38,6 +37,7 @@ import heapdive.html.model.HProfAnalysisReport
 import heapdive.html.model.HeapSummaryReport
 import heapdive.html.model.HistogramReport
 import heapdive.html.model.NominatedClass
+import heapdive.utils.Stopwatch
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
@@ -48,7 +48,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintWriter
 import java.util.Arrays
-import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 import kotlin.math.max
 import kotlin.math.min
@@ -118,7 +117,7 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
             NominatedClass(
                     className = classDefinition.prettyName,
                     objectCount = objectCount,
-                    elapsedMillis = stopwatch.elapsed(TimeUnit.MILLISECONDS),
+                    elapsedMillis = stopwatch.elapsedMillis(),
                     tree = referenceRegistry.printTree()
             )
         }
@@ -485,8 +484,8 @@ open class AnalyzeHtmlReport(protected val analysisContext: AnalysisContext, pri
 
         return HeapSummaryReport(
                 visitedInstancesCount,
-                stopwatch.elapsed(TimeUnit.MILLISECONDS),
-                stopwatchUpdateSizes.elapsed(TimeUnit.MILLISECONDS),
+                stopwatch.elapsedMillis(),
+                stopwatchUpdateSizes.elapsedMillis(),
                 leafCounter,
                 classStore.size(),
                 finalizableBytes,

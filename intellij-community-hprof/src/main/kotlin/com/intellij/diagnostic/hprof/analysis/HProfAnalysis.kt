@@ -15,7 +15,6 @@
  */
 package com.intellij.diagnostic.hprof.analysis
 
-import com.google.common.base.Stopwatch
 import com.intellij.diagnostic.DiagnosticBundle
 import com.intellij.diagnostic.hprof.classstore.HProfMetadata
 import com.intellij.diagnostic.hprof.histogram.Histogram
@@ -30,6 +29,7 @@ import com.intellij.diagnostic.hprof.util.ListProvider
 import com.intellij.diagnostic.hprof.util.PartialProgressIndicator
 import com.intellij.diagnostic.hprof.visitors.RemapIDsVisitor
 import com.intellij.openapi.progress.ProgressIndicator
+import heapdive.utils.Stopwatch
 import org.jetbrains.annotations.NonNls
 import java.nio.channels.FileChannel
 import java.nio.file.Files

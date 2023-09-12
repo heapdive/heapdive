@@ -15,10 +15,10 @@
  */
 package com.intellij.diagnostic.hprof.parser
 
-import com.google.common.base.Stopwatch
 import com.intellij.diagnostic.hprof.util.HProfReadBuffer
 import com.intellij.diagnostic.hprof.util.HProfReadBufferSlidingWindow
 import com.intellij.openapi.diagnostic.Logger
+import heapdive.utils.Stopwatch
 import java.io.EOFException
 import java.io.IOException
 import java.nio.channels.FileChannel
