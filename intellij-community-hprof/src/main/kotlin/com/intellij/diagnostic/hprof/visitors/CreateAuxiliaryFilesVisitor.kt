@@ -25,7 +25,7 @@ import com.intellij.diagnostic.hprof.parser.InstanceFieldEntry
 import com.intellij.diagnostic.hprof.parser.StaticFieldEntry
 import com.intellij.diagnostic.hprof.parser.Type
 import com.intellij.diagnostic.hprof.util.FileChannelBackedWriteBuffer
-import com.intellij.openapi.diagnostic.Logger
+import org.slf4j.LoggerFactory
 import java.nio.ByteBuffer
 import java.nio.channels.FileChannel
 
@@ -45,7 +45,7 @@ internal class CreateAuxiliaryFilesVisitor(
     private var stringCoderOffset: Int = -1
 
     companion object {
-        private val LOG = Logger.getInstance(CreateAuxiliaryFilesVisitor::class.java)
+        private val LOG = LoggerFactory.getLogger(CreateAuxiliaryFilesVisitor::class.java)
     }
 
     override fun preVisit() {
