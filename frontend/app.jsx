@@ -19,12 +19,15 @@ import {SizeHistogramInformation} from "./sizeHistogramInformation";
 import {PerClassInformation} from "./perClassInformation";
 import {ByCountHistogramInformation} from "./byCountHistogramInformation";
 import {MetadataPane} from "./metadataPane";
+import {ChartInformation} from "./chartInformation";
 
 export class App extends React.Component {
     render() {
         const result = this.props.result;
 
         return <div>
+            <ChartInformation data={result.analysisReport.flameGraph}/>
+
             <SizeHistogramInformation bySizeHistogram={result.analysisReport.histogram.bySizeHistogram}/>
 
             <h2>Instances of each nominated class</h2>
