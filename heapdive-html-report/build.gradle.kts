@@ -27,8 +27,6 @@ dependencies {
 
     implementation(project(":intellij-community-hprof"))
 
-    implementation(libs.commons.text)
-
     implementation(libs.logback)
     implementation(libs.slf4j)
 

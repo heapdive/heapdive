@@ -34,8 +34,6 @@ dependencies {
 
     implementation(libs.guava)
 
-    implementation(libs.commons.text)
-
     implementation(libs.logback)
     implementation(libs.slf4j)
 
