@@ -92,3 +92,11 @@ h2 {
 .muted {
     color: #cccccc;
 }
+
+pre.code {
+    background-color: #333333;
+    color: white;
+    padding: 4px;
+    border-radius: 4px;
+}
+

@@ -45,6 +45,8 @@ heap-dump-tool.jar
 node_modules/
 *.hprof
 
+heapdive-html-report/src/main/resources/static/styles.css
 heapdive-html-report/src/main/resources/static/main.bundle.js
 heapdive-html-report/src/main/resources/static/main.bundle.js.LICENSE.txt
 heapdive-html-report/src/main/resources/sample.hprof.analyzed.json
+sample.hprof.analyzed.html
