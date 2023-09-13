@@ -20,6 +20,7 @@ import {App} from "./app";
 import "./css/main.css";
 import 'd3-flame-graph/dist/d3-flamegraph.css'
 import {createRoot} from "react-dom/client";
+import {CorsUploadForm} from "./corsUploadForm";
 
 function getApiUrl() {
     let path = new URL(location.href).pathname;
@@ -83,12 +84,30 @@ function renderPartitions(hierarchyData, targetSelector) {
 }
 
 async function main() {
+    const reportRootElement = document.getElementById('report-root');
+    if (reportRootElement) {
+        await renderReport(reportRootElement);
+    }
+
+    const corsUploadForm = document.getElementById('cors-upload-form');
+    if (corsUploadForm) {
+        renderCorsUploadForm(corsUploadForm)
+    }
+}
+
+function renderCorsUploadForm(corsUploadForm) {
+    const root = createRoot(corsUploadForm);
+    root.render(<CorsUploadForm/>);
+}
+
+
+async function renderReport(targetElement) {
     const result = window.HEAPDIVE_RESULT ? window.HEAPDIVE_RESULT : await getResult();
     console.log(result)
 
     renderChart(result, "chart");
 
-    const root = createRoot(document.getElementById('root'));
+    const root = createRoot(targetElement);
     root.render(<App result={result}/>);
 }
 

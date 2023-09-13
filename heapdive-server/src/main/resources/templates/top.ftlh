@@ -5,6 +5,7 @@
     <title>heapdive</title>
 
     <link href="/static/styles.css?${cacheKey}" rel="stylesheet"/>
+    <script src="/static/main.bundle.js?${cacheKey}"></script>
 </head>
 <body>
 <h1>Heapdive</h1>
@@ -16,6 +17,10 @@ curl -X POST -H "Content-Type: application/octet-stream" -T "sample.hprof" ${upl
 </pre>
 
 If you want to add `x-name` header, it will be stored as a s3 metadata.
+
+<h2>CORS Upload</h2>
+
+<div id="cors-upload-form"></div>
 
 <h2>Recent uploads</h2>
 
