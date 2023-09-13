@@ -9,6 +9,6 @@ management:
   endpoints:
     web:
       exposure:
-        include: env,health,configprops
+        include: env,health,configprops,info
   server:
     port: 8081

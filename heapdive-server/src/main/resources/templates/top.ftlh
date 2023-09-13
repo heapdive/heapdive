@@ -41,5 +41,12 @@ If you want to add `x-name` header, it will be stored as a s3 metadata.
     </table>
 </#list>
 
+<footer>
+    <p>
+        Built at ${buildTime}.
+        Git branch=${gitBranch}, commitTime=${gitCommitTime}, commitId=${gitCommitId}.
+    </p>
+</footer>
+
 </body>
 </html>

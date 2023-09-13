@@ -20,6 +20,8 @@ import heapdive.html.renderHProfJson
 import heapdive.server.service.S3Service
 import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
+import org.springframework.boot.info.BuildProperties
+import org.springframework.boot.info.GitProperties
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -32,11 +34,14 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.io.File
 import java.io.FileOutputStream
 import java.time.YearMonth
+import java.time.ZoneId
 
 
 @Controller
 class HeapdiveController(
         private val s3Service: S3Service,
+        private val buildProperties: BuildProperties,
+        private val gitProperties: GitProperties,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val cacheKey = System.currentTimeMillis()
@@ -53,6 +58,11 @@ class HeapdiveController(
         model.addAttribute("uploadUrl", uploadUrl)
 
         model.addAttribute("cacheKey", cacheKey)
+
+        model.addAttribute("buildTime", buildProperties.time.atZone(ZoneId.systemDefault()).toString())
+        model.addAttribute("gitBranch", gitProperties.branch)
+        model.addAttribute("gitCommitTime", gitProperties.commitTime.atZone(ZoneId.systemDefault()).toString())
+        model.addAttribute("gitCommitId", gitProperties.commitId)
 
         return "top"
     }
