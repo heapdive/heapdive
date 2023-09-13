@@ -10,7 +10,7 @@
 
 <h1><a href="/">Heapdive</a></h1>
 
-<div id="root"></div>
+<div id="report-root"></div>
 
 </body>
 </html>
