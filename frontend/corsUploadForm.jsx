@@ -82,6 +82,17 @@ export class CorsUploadForm extends React.Component {
                 CORS and upload it to Heapdive.
             </p>
             <p>
+                Please configure the following:<br/>
+                <ul>
+                    <li>Allow CORS requests for the actuator endpoint</li>
+                    <li>Activate the heapdump endpoint</li>
+                </ul>
+                <pre className={"code"}>management.endpoints.web.cors.allowed-origins={location.href}<br/>management.endpoints.web.exposure.include=heapdump</pre>
+
+                <p><b>WARNING: Ensure you set up authentication correctly. Without proper configuration, sensitive data
+                    in heapdumps can be exposed.</b></p>
+            </p>
+            <p>
                 For more details, please visit <a
                 href="https://github.com/heapdive/spring-boot-actuator-heapdump-cors-demo" target="_blank"
                 rel="noopener noreferrer">https://github.com/heapdive/spring-boot-actuator-heapdump-cors-demo</a>.
