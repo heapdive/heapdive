@@ -15,7 +15,7 @@
  */
 
 plugins {
-    id("org.springframework.boot") version "3.1.4"
+    id("org.springframework.boot") version "3.1.5"
     id("heapdive-kotlin")
     kotlin("plugin.spring") version "1.9.10"
 }
