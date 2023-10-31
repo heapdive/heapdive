@@ -13,7 +13,7 @@ slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.9" }
 logback = { module = "ch.qos.logback:logback-classic", version = "1.4.11" }
 junit-bom = { module = "org.junit:junit-bom", version = "5.10.0" }
 assertj-core = { module = "org.assertj:assertj-core", version = "3.24.2" }
-aws-sdk-s3 = { module = "software.amazon.awssdk:s3", version = "2.21.11" }
+aws-sdk-s3 = { module = "software.amazon.awssdk:s3", version = "2.21.12" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version = "2.15.3" }
 jackson-datatype-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version = "2.15.3" }
 kotlinx-cli = { module = "org.jetbrains.kotlinx:kotlinx-cli", version = "0.3.6" }
