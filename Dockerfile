@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21
+FROM eclipse-temurin:17
 
 RUN --mount=type=cache,target=/var/cache/apt \
     apt-get update && \
