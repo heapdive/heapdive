@@ -21,12 +21,16 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        java-version: ['17', '21'] # Javaのバージョンを配列で指定
+
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 21
+    - name: Set up JDK ${{ matrix.java-version }}
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: ${{ matrix.java-version }}
         distribution: 'temurin'
     - name: Build with Gradle
       uses: gradle/gradle-build-action@3b1b3b9a2104c2b47fbae53f3938079c00c9bb87 # v3.0.0
