@@ -16,7 +16,7 @@
 
 plugins {
     kotlin("jvm")
-    id("com.github.node-gradle.node") version "7.0.1"
+    id("com.github.node-gradle.node") version "7.0.2"
 }
 
 allprojects {
