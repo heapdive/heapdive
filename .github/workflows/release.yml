@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew -PreleaseVersion=${{github.event.release.tag_name}} :heapdive-cli:build
 
       - name: Upload JAR to Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
