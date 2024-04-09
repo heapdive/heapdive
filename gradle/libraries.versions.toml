@@ -10,7 +10,7 @@ springboot-plugin = { module = "org.springframework.boot:spring-boot-gradle-plug
 springboot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
 fastutil = { module = "it.unimi.dsi:fastutil", version = "8.5.13" }
 slf4j = { module = "org.slf4j:slf4j-api", version = "2.0.12" }
-logback = { module = "ch.qos.logback:logback-classic", version = "1.5.3" }
+logback = { module = "ch.qos.logback:logback-classic", version = "1.5.4" }
 junit-bom = { module = "org.junit:junit-bom", version = "5.10.2" }
 assertj-core = { module = "org.assertj:assertj-core", version = "3.25.3" }
 aws-sdk-s3 = { module = "software.amazon.awssdk:s3", version = "2.25.27" }
