@@ -8,5 +8,6 @@
   "git-submodules": {
     "enabled": true
   },
-  "labels": [ "dependency upgrade" ]
+  "labels": [ "dependency upgrade" ],
+  "schedule": ["on the 17th day of the month"]
 }
