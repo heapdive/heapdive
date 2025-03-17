@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.1.10"
-spring-boot = "3.4.2"
+spring-boot = "3.4.3"
 
 [libraries]
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
